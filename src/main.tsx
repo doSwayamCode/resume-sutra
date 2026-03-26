@@ -1,15 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import App from "./App";
 import "./index.css";
-
-if (import.meta.env.PROD) {
-  const analyticsScript = document.createElement("script");
-  analyticsScript.defer = true;
-  analyticsScript.src = "/_vercel/insights/script.js";
-  document.head.appendChild(analyticsScript);
-}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -21,5 +15,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     >
       <App />
     </BrowserRouter>
+    <Analytics />
   </React.StrictMode>,
 );
