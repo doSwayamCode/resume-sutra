@@ -140,6 +140,17 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins,
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ["react", "react-dom", "react-router-dom", "zustand"],
+            pdf: ["html2canvas", "jspdf", "html2pdf.js"],
+            http: ["axios"],
+          },
+        },
+      },
+    },
     server: {
       port: 5173,
     },
