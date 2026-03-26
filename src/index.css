@@ -1,8 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=STIX+Two+Text:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=STIX+Two+Text:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap");
 
 :root {
   font-family: "Segoe UI", "Calibri", Arial, sans-serif;
