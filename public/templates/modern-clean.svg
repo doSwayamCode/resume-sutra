@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Modern clean template preview">
+  <defs>
+    <linearGradient id="bgc3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecfeff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bgc3)"/>
+  <rect x="255" y="32" width="690" height="696" rx="6" fill="#fff" stroke="#d1d5db"/>
+  <rect x="300" y="78" width="250" height="30" fill="#111827"/>
+  <rect x="300" y="118" width="420" height="10" fill="#334155"/>
+  <rect x="300" y="150" width="600" height="3" fill="#111827"/>
+  <rect x="300" y="176" width="180" height="11" fill="#111827"/>
+  <rect x="760" y="176" width="130" height="9" fill="#6b7280"/>
+  <circle cx="316" cy="204" r="3" fill="#111827"/>
+  <rect x="330" y="199" width="520" height="8" fill="#374151"/>
+  <circle cx="316" cy="222" r="3" fill="#111827"/>
+  <rect x="330" y="217" width="500" height="8" fill="#374151"/>
+  <rect x="300" y="258" width="600" height="3" fill="#111827"/>
+  <rect x="300" y="284" width="180" height="11" fill="#111827"/>
+  <circle cx="316" cy="312" r="3" fill="#111827"/>
+  <rect x="330" y="307" width="520" height="8" fill="#374151"/>
+  <rect x="300" y="348" width="600" height="3" fill="#111827"/>
+  <rect x="300" y="374" width="180" height="11" fill="#111827"/>
+  <rect x="300" y="398" width="520" height="8" fill="#374151"/>
+</svg>

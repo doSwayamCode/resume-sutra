@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=STIX+Two+Text:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap");
+
+:root {
+  font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+  --app-bg-a: #eef5ff;
+  --app-bg-b: #f9f4ff;
+  --app-bg-c: #f7fff6;
+  --accent-1: #2563eb;
+  --accent-2: #0f766e;
+}
+
+body {
+  margin: 0;
+  color: #111827;
+  background:
+    radial-gradient(circle at 12% 10%, var(--app-bg-a) 0%, transparent 36%),
+    radial-gradient(circle at 88% 12%, var(--app-bg-b) 0%, transparent 38%),
+    radial-gradient(circle at 50% 100%, var(--app-bg-c) 0%, transparent 45%),
+    #f8fafc;
+}
+
+.resume-paper {
+  width: 794px;
+  min-height: 1122px;
+  max-height: 1122px;
+  background: #fff;
+  margin: 0 auto;
+  padding: 28px 30px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+
+.app-glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.field-focus:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.resume {
+  width: 100%;
+  margin: 0;
+  color: #000;
+  font-family: var(--resume-font-family, "Latin Modern Roman", "Computer Modern Serif", "STIX Two Text", "Times New Roman", serif);
+  font-size: var(--resume-font-size, 12px);
+  line-height: var(--resume-line-height, 1.45);
+}
+
+.name {
+  margin: 0;
+  font-size: calc(var(--resume-font-size, 12px) * 1.8);
+  font-weight: 700;
+}
+
+.contact {
+  margin: 4px 0 8px;
+  word-break: break-word;
+}
+
+.resume section {
+  margin-top: var(--resume-section-gap, 12px);
+}
+
+.resume h2 {
+  margin: 0 0 4px;
+  font-size: calc(var(--resume-font-size, 12px) * 1.14);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid #000;
+}
+
+.item {
+  margin-top: var(--resume-item-gap, 6px);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-weight: 700;
+}
+
+.date {
+  white-space: nowrap;
+}
+
+.resume p {
+  margin: 2px 0;
+}
+
+.resume ul {
+  margin: 2px 0 0;
+  padding-left: 16px;
+}
+
+.resume li {
+  margin: 0;
+}
+
+@media (max-width: 1280px) {
+  .preview-canvas .resume-paper {
+    transform: scale(0.94);
+    transform-origin: top center;
+    margin-bottom: -70px;
+  }
+}
+
+@media (max-width: 900px) {
+  .preview-canvas .resume-paper {
+    width: 100%;
+    min-height: auto;
+    max-height: none;
+    transform: none;
+    margin-bottom: 0;
+  }
+}
+

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Classic logo template preview">
+  <defs>
+    <linearGradient id="bgc1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f3f4f6"/>
+      <stop offset="100%" stop-color="#e5e7eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bgc1)"/>
+  <rect x="255" y="32" width="690" height="696" rx="6" fill="#fff" stroke="#d1d5db"/>
+  <circle cx="330" cy="105" r="42" fill="#f8fafc" stroke="#94a3b8"/>
+  <circle cx="330" cy="105" r="26" fill="#e2e8f0" stroke="#64748b"/>
+  <rect x="390" y="72" width="220" height="18" fill="#111827"/>
+  <rect x="390" y="98" width="190" height="10" fill="#374151"/>
+  <rect x="390" y="116" width="140" height="9" fill="#4b5563"/>
+  <rect x="720" y="80" width="180" height="10" fill="#1f2937"/>
+  <rect x="720" y="100" width="180" height="10" fill="#1f2937"/>
+  <rect x="720" y="120" width="180" height="10" fill="#1f2937"/>
+  <rect x="300" y="165" width="600" height="3" fill="#111827"/>
+  <rect x="300" y="190" width="220" height="12" fill="#111827"/>
+  <rect x="760" y="190" width="120" height="10" fill="#6b7280"/>
+  <circle cx="312" cy="219" r="3" fill="#111827"/>
+  <rect x="326" y="214" width="530" height="8" fill="#374151"/>
+  <circle cx="312" cy="238" r="3" fill="#111827"/>
+  <rect x="326" y="233" width="430" height="8" fill="#374151"/>
+  <rect x="300" y="272" width="600" height="3" fill="#111827"/>
+  <rect x="300" y="297" width="220" height="12" fill="#111827"/>
+  <rect x="760" y="297" width="120" height="10" fill="#6b7280"/>
+  <circle cx="312" cy="326" r="3" fill="#111827"/>
+  <rect x="326" y="321" width="530" height="8" fill="#374151"/>
+  <rect x="300" y="360" width="600" height="3" fill="#111827"/>
+  <rect x="300" y="385" width="350" height="10" fill="#374151"/>
+  <rect x="300" y="430" width="600" height="3" fill="#111827"/>
+  <circle cx="312" cy="455" r="3" fill="#111827"/>
+  <rect x="326" y="450" width="530" height="8" fill="#374151"/>
+</svg>
