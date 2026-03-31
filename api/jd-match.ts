@@ -103,7 +103,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     res.status(200).json({ result });
-  } catch {
+  } catch (error) {
+    console.error("/api/jd-match failed", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }

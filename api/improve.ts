@@ -119,7 +119,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     res.status(200).json({ suggestion });
-  } catch {
+  } catch (error) {
+    console.error("/api/improve failed", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }
