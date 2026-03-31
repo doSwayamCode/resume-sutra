@@ -1,6 +1,4 @@
-type ImproveMode = "experience" | "summary" | "grammar" | "recruiter";
-
-const promptByMode: Record<ImproveMode, string> = {
+const promptByMode = {
   experience:
     "Rewrite the following into 2-3 strong ATS-friendly resume bullet points. Use action verbs, include measurable impact, keep concise and professional.\n\nInput:\n{user_text}\n\nOutput:\n* Bullet 1\n* Bullet 2\n* Bullet 3",
   summary:
@@ -13,31 +11,29 @@ const promptByMode: Record<ImproveMode, string> = {
 
 const MAX_INPUT_LENGTH = 4000;
 
-function setApiSecurityHeaders(res: any) {
+function setApiSecurityHeaders(res) {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");
 }
 
-function parseRequestBody(req: any): Record<string, unknown> | null {
+function parseRequestBody(req) {
   if (!req.body) return {};
   if (typeof req.body === "string") {
     try {
-      return JSON.parse(req.body) as Record<string, unknown>;
+      return JSON.parse(req.body);
     } catch {
       return null;
     }
   }
-
   if (typeof req.body === "object") {
-    return req.body as Record<string, unknown>;
+    return req.body;
   }
-
   return null;
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   setApiSecurityHeaders(res);
 
   if (req.method !== "POST") {
@@ -58,7 +54,7 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const mode = body?.mode as ImproveMode;
+  const mode = body?.mode;
   const input = (body?.input ?? "").toString().trim();
 
   if (!mode || !(mode in promptByMode)) {
@@ -102,15 +98,14 @@ export default async function handler(req: any, res: any) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      console.error("/api/improve Groq error", response.status, errorText);
       res.status(502).json({ error: "Groq request failed" });
       return;
     }
 
-    const json = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-
-    const suggestion = json.choices?.[0]?.message?.content?.trim();
+    const json = await response.json();
+    const suggestion = json?.choices?.[0]?.message?.content?.trim();
     if (!suggestion) {
       res.status(502).json({ error: "Empty AI response" });
       return;

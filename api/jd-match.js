@@ -1,31 +1,29 @@
 const MAX_JD_LENGTH = 8000;
 const MAX_RESUME_LENGTH = 12000;
 
-function setApiSecurityHeaders(res: any) {
+function setApiSecurityHeaders(res) {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");
 }
 
-function parseRequestBody(req: any): Record<string, unknown> | null {
+function parseRequestBody(req) {
   if (!req.body) return {};
   if (typeof req.body === "string") {
     try {
-      return JSON.parse(req.body) as Record<string, unknown>;
+      return JSON.parse(req.body);
     } catch {
       return null;
     }
   }
-
   if (typeof req.body === "object") {
-    return req.body as Record<string, unknown>;
+    return req.body;
   }
-
   return null;
 }
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   setApiSecurityHeaders(res);
 
   if (req.method !== "POST") {
@@ -86,15 +84,14 @@ export default async function handler(req: any, res: any) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      console.error("/api/jd-match Groq error", response.status, errorText);
       res.status(502).json({ error: "Groq request failed" });
       return;
     }
 
-    const json = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-
-    const result = json.choices?.[0]?.message?.content?.trim();
+    const json = await response.json();
+    const result = json?.choices?.[0]?.message?.content?.trim();
     if (!result) {
       res.status(502).json({ error: "Empty AI response" });
       return;
