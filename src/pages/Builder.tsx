@@ -597,6 +597,22 @@ function Builder() {
   const resumeHealth = useMemo(() => computeResumeHealth(data), [data]);
   const collegeOptions = TEMPLATE_COLLEGE_OPTIONS[safeTemplate] ?? [];
 
+  const getApiErrorMessage = (error: unknown, fallback: string) => {
+    if (axios.isAxiosError(error)) {
+      const apiError = (error.response?.data as { error?: string } | undefined)?.error?.trim();
+      if (apiError) {
+        if (apiError === "Missing GROQ_API_KEY") {
+          return "AI is not configured on server. Add GROQ_API_KEY in Vercel Project Settings -> Environment Variables and redeploy.";
+        }
+        return apiError;
+      }
+      if (error.response?.status) {
+        return `${fallback} (HTTP ${error.response.status})`;
+      }
+    }
+    return error instanceof Error ? error.message : fallback;
+  };
+
   useEffect(() => {
     setSkillsInput(skillsText);
   }, [skillsText]);
@@ -608,8 +624,7 @@ function Builder() {
       const response = await axios.post<{ suggestion: string }>("/api/improve", payload);
       return response.data.suggestion;
     } catch (error) {
-      const fallback = error instanceof Error ? error.message : "AI request failed";
-      setMessage(fallback);
+      setMessage(getApiErrorMessage(error, "AI request failed"));
       return "";
     } finally {
       setLoadingKey("");
@@ -784,7 +799,7 @@ function Builder() {
       });
       setJdResult(response.data.result);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "JD analysis failed");
+      setMessage(getApiErrorMessage(error, "JD analysis failed"));
     } finally {
       setLoadingKey("");
     }
