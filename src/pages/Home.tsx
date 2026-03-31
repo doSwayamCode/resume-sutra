@@ -223,8 +223,8 @@ function Home() {
           {/* View Counter */}
           <div className="mt-10 flex flex-col items-center justify-center">
               {/* hitwebcounter Code START */}
-              <a href="https://www.hitwebcounter.com/" target="_blank">
-                <img src="https://hitwebcounter.com/counter/counter.php?page=21486236&style=0005&nbdigits=6&type=page&initCount=72" title="Free Tools" alt="Free Tools" border="0" />
+                <a href="https://www.hitwebcounter.com/" target="_blank">
+                  <img src="https://hitwebcounter.com/counter/counter.php?page=21486236&style=0005&nbdigits=6&type=page&initCount=72" title="Free Tools" alt="Free Tools" />
               </a>
             <div className="mt-2 text-sm text-slate-500">
               Made with <span className="text-pink-500">♥</span> by{' '}
