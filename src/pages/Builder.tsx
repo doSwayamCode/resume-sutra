@@ -22,6 +22,213 @@ type TemplateFormConfig = {
   showCertificationsAndPositions: boolean;
 };
 
+type ResumeHealth = {
+  score: number;
+  positives: string[];
+  warnings: string[];
+};
+
+const IIT_COLLEGES = [
+  "IIT Bombay",
+  "IIT Delhi",
+  "IIT Kanpur",
+  "IIT Kharagpur",
+  "IIT Madras",
+  "IIT Roorkee",
+  "IIT Guwahati",
+  "IIT Bhubaneswar",
+  "IIT Gandhinagar",
+  "IIT Hyderabad",
+  "IIT Indore",
+  "IIT Jodhpur",
+  "IIT Mandi",
+  "IIT Patna",
+  "IIT Ropar",
+  "IIT (BHU) Varanasi",
+  "IIT Palakkad",
+  "IIT Tirupati",
+  "IIT Dhanbad",
+  "IIT Bhilai",
+  "IIT Goa",
+  "IIT Jammu",
+  "IIT Dharwad",
+];
+const NIT_COLLEGES = [
+  "NIT Agartala",
+  "NIT Allahabad",
+  "NIT Andhra Pradesh",
+  "NIT Arunachal Pradesh",
+  "NIT Calicut",
+  "NIT Delhi",
+  "NIT Durgapur",
+  "NIT Goa",
+  "NIT Hamirpur",
+  "NIT Jamshedpur",
+  "NIT Kurukshetra",
+  "NIT Manipur",
+  "NIT Meghalaya",
+  "NIT Mizoram",
+  "NIT Nagaland",
+  "NIT Patna",
+  "NIT Puducherry",
+  "NIT Raipur",
+  "NIT Rourkela",
+  "NIT Sikkim",
+  "NIT Silchar",
+  "NIT Srinagar",
+  "NIT Surat",
+  "NIT Surathkal",
+  "NIT Tiruchirappalli",
+  "NIT Uttarakhand",
+  "NIT Warangal",
+];
+const IIIT_COLLEGES = ["IIIT Hyderabad", "IIIT Bangalore", "IIIT Delhi", "IIIT Allahabad", "IIIT Guwahati"];
+const IIM_COLLEGES = [
+  "IIM Ahmedabad",
+  "IIM Amritsar",
+  "IIM Bangalore",
+  "IIM Bodh Gaya",
+  "IIM Calcutta",
+  "IIM Indore",
+  "IIM Jammu",
+  "IIM Kashipur",
+  "IIM Kozhikode",
+  "IIM Lucknow",
+  "IIM Mumbai",
+  "IIM Nagpur",
+  "IIM Raipur",
+  "IIM Ranchi",
+  "IIM Rohtak",
+  "IIM Sambalpur",
+  "IIM Shillong",
+  "IIM Sirmaur",
+  "IIM Tiruchirappalli",
+  "IIM Udaipur",
+  "IIM Visakhapatnam",
+];
+const BITS_CAMPUSES = ["BITS Pilani", "BITS Goa", "BITS Hyderabad", "BITS Dubai"];
+
+const TEMPLATE_COLLEGE_OPTIONS: Partial<Record<ResumeTemplate, string[]>> = {
+  "iit-placement": IIT_COLLEGES,
+  "nit-placement": NIT_COLLEGES,
+  "iiit-placement": IIIT_COLLEGES,
+  "iim-management": IIM_COLLEGES,
+  "bits-placement": BITS_CAMPUSES,
+};
+
+const FIXED_TEMPLATE_LOGO: Partial<Record<ResumeTemplate, string>> = {
+  "dtu-placement": "/logos/dtu.png",
+  "nsut-placement": "/logos/nsut.svg",
+  "ggsipu-placement": "/logos/ggsipu.svg",
+  "igdtuw-placement": "/logos/igdtuw-official.png",
+  "iisc-academic": "/logos/iisc.svg",
+};
+
+const COLLEGE_LOGO_MAP: Record<string, string> = {
+  "IIT Bombay": "/logos/iit-bombay.svg",
+  "IIT Delhi": "/logos/iit-delhi.svg",
+  "IIT Kanpur": "/logos/iit-kanpur.svg",
+  "IIT Kharagpur": "/logos/iit-kharagpur.svg",
+  "IIT Madras": "/logos/iit-madras.svg",
+  "IIT Roorkee": "/logos/iit-roorkee.svg",
+  "IIT Guwahati": "/logos/iit-guwahati.svg",
+  "IIT Bhubaneswar": "/logos/iit-bhubaneswar.svg",
+  "IIT Gandhinagar": "/logos/iit-gandhinagar.svg",
+  "IIT Hyderabad": "/logos/iit-hyderabad.svg",
+  "IIT Indore": "/logos/iit-indore.svg",
+  "IIT Jodhpur": "/logos/iit-jodhpur.svg",
+  "IIT Mandi": "/logos/iit-mandi.svg",
+  "IIT Patna": "/logos/iit-patna.svg",
+  "IIT Ropar": "/logos/iit-ropar.svg",
+  "IIT Palakkad": "/logos/iit-palakkad.svg",
+  "IIT (BHU) Varanasi": "/logos/iit-bhu.svg",
+  "IIT BHU": "/logos/iit-bhu.svg",
+  "IIT Tirupati": "/logos/iit-tirupati.svg",
+  "IIT Dhanbad": "/logos/iit-dhanbad.svg",
+  "IIT Bhilai": "/logos/iit-bhilai.svg",
+  "IIT Goa": "/logos/iit-goa.svg",
+  "IIT Jammu": "/logos/iit-jammu.svg",
+  "IIT Dharwad": "/logos/iit-dharwad.svg",
+  "NIT Agartala": "/logos/nit-agartala.png",
+  "NIT Allahabad": "/logos/nit-allahabad.png",
+  "NIT Arunachal Pradesh": "/logos/nit-arunachal.png",
+  "NIT Delhi": "/logos/nit-delhi.svg",
+  "NIT Durgapur": "/logos/nit-durgapur.svg",
+  "NIT Goa": "/logos/nit-goa.png",
+  "NIT Hamirpur": "/logos/nit-hamirpur.png",
+  "NIT Jamshedpur": "/logos/nit-jamshedpur.png",
+  "NIT Kurukshetra": "/logos/nit-kurukshetra.png",
+  "NIT Manipur": "/logos/nit-manipur.png",
+  "NIT Meghalaya": "/logos/nit-meghalaya.png",
+  "NIT Mizoram": "/logos/nit-mizoram.png",
+  "NIT Nagaland": "/logos/nit-nagaland.png",
+  "NIT Patna": "/logos/nit-patna.png",
+  "NIT Puducherry": "/logos/nit-puducherry.png",
+  "NIT Raipur": "/logos/nit-raipur.png",
+  "NIT Sikkim": "/logos/nit-sikkim.svg",
+  "NIT Silchar": "/logos/nit-silchar.svg",
+  "NIT Srinagar": "/logos/nit-srinagar.png",
+  "NIT Surat": "/logos/nit-surat.svg",
+  "NIT Tiruchirappalli": "/logos/nit-tiruchirappalli.svg",
+  "NIT Trichy": "/logos/nit-tiruchirappalli.svg",
+  "NIT Tiruchapalli": "/logos/nit-tiruchirappalli.svg",
+  "NIT Uttarakhand": "/logos/nit-uttarakhand.png",
+  "NIT Warangal": "/logos/nit-warangal.png",
+  "NIT Surathkal": "/logos/nit-surathkal-official.png",
+  "NIT Rourkela": "/logos/nit-rourkela-official.png",
+  "NIT Calicut": "/logos/nit-calicut.svg",
+  "IIIT Hyderabad": "/logos/iiit-hyderabad.png",
+  "IIIT Bangalore": "/logos/iiit-bangalore.svg",
+  "IIIT Delhi": "/logos/iiit-delhi-official.svg",
+  "IIIT Allahabad": "/logos/iiit-allahabad.png",
+  "IIIT Guwahati": "/logos/iiit-guwahati.svg",
+  "IIM Amritsar": "/logos/iim-amritsar.svg",
+  "IIM Ahmedabad": "/logos/iim-ahmedabad.svg",
+  "IIM Bangalore": "/logos/iim-bangalore.svg",
+  "IIM Bodh Gaya": "/logos/iim-bodhgaya.png",
+  "IIM Calcutta": "/logos/iim-calcutta.svg",
+  "IIM Jammu": "/logos/iim-jammu.png",
+  "IIM Kashipur": "/logos/iim-kashipur.png",
+  "IIM Lucknow": "/logos/iim-lucknow.svg",
+  "IIM Kozhikode": "/logos/iim-kozhikode.svg",
+  "IIM Indore": "/logos/iim-indore.svg",
+  "IIM Mumbai": "/logos/iim-mumbai.svg",
+  "IIM Nagpur": "/logos/iim-nagpur.jpg",
+  "IIM Raipur": "/logos/iim-raipur.png",
+  "IIM Ranchi": "/logos/iim-ranchi.svg",
+  "IIM Rohtak": "/logos/iim-rohtak.png",
+  "IIM Sambalpur": "/logos/iim-sambalpur.svg",
+  "IIM Shillong": "/logos/iim-shillong.png",
+  "IIM Sirmaur": "/logos/iim-sirmaur.png",
+  "IIM Tiruchirappalli": "/logos/iim-trichy.png",
+  "IIM Trichy": "/logos/iim-trichy.png",
+  "IIM Udaipur": "/logos/iim-udaipur.png",
+  "IIM Visakhapatnam": "/logos/iim-visakhapatnam.png",
+  "BITS Pilani": "/logos/bits-pilani.svg",
+  "BITS Goa": "/logos/bits-goa.svg",
+  "BITS Hyderabad": "/logos/bits-hyderabad.svg",
+  "BITS Dubai": "/logos/bits-dubai.png",
+};
+
+const COLLEGE_FAMILY_FALLBACK_LOGO: Array<{ prefix: string; logo: string }> = [
+  { prefix: "BITS ", logo: "/logos/bits-pilani.svg" },
+];
+
+function resolveDefaultLogo(template: ResumeTemplate, collegeName: string): string {
+  if (FIXED_TEMPLATE_LOGO[template]) {
+    return FIXED_TEMPLATE_LOGO[template] ?? "";
+  }
+  if (!collegeName.trim()) {
+    return "";
+  }
+  if (COLLEGE_LOGO_MAP[collegeName]) {
+    return COLLEGE_LOGO_MAP[collegeName];
+  }
+
+  const fallbackByFamily = COLLEGE_FAMILY_FALLBACK_LOGO.find((entry) => collegeName.startsWith(entry.prefix));
+  return fallbackByFamily?.logo ?? "";
+}
+
 const TEMPLATE_FORM_CONFIG: Record<ResumeTemplate, TemplateFormConfig> = {
   jake: {
     supportsLogo: false,
@@ -47,15 +254,161 @@ const TEMPLATE_FORM_CONFIG: Record<ResumeTemplate, TemplateFormConfig> = {
     showAchievements: true,
     showCertificationsAndPositions: false,
   },
+  "dtu-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: false,
+  },
+  "nsut-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: false,
+  },
+  "iit-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "nit-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "iiit-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "iisc-academic": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "igdtuw-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: false,
+  },
+  "bits-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "iim-management": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "ggsipu-placement": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
+  "ca-professional": {
+    supportsLogo: true,
+    showSummary: true,
+    showAchievements: true,
+    showCertificationsAndPositions: true,
+  },
 };
 
 const FONT_STYLE_OPTIONS: Array<{ value: ResumeFontStyle; label: string }> = [
-  { value: "latex", label: "LaTeX Professional" },
-  { value: "classic", label: "Classic Serif" },
+  { value: "serif-pro", label: "Professional Serif (Recommended)" },
+  { value: "latex", label: "LaTeX Classic" },
   { value: "modern", label: "Modern Serif" },
+  { value: "classic", label: "Classic Garamond" },
+  { value: "executive", label: "Executive Readable" },
+  { value: "clean-sans", label: "Clean Sans" },
 ];
 
-const FONT_SIZE_OPTIONS = [12.5, 13, 13.5, 14, 14.5];
+const FONT_SIZE_OPTIONS = [12, 12.5, 12.8, 13, 13.5, 14, 14.5];
+
+const TEMPLATE_LAYOUT_PRESETS: Record<ResumeTemplate, Partial<ReturnType<typeof useResumeStore.getState>["layout"]>> = {
+  jake: { fontStyle: "serif-pro", fontSize: 12.8, lineHeight: 1.34, sectionGap: 9, itemGap: 4 },
+  "classic-logo": { fontStyle: "classic", fontSize: 12.6, lineHeight: 1.33, sectionGap: 9, itemGap: 4 },
+  "table-edu": { fontStyle: "clean-sans", fontSize: 12.4, lineHeight: 1.3, sectionGap: 9, itemGap: 4 },
+  "modern-clean": { fontStyle: "modern", fontSize: 12.8, lineHeight: 1.36, sectionGap: 9, itemGap: 4 },
+  "dtu-placement": { fontStyle: "latex", fontSize: 12.7, lineHeight: 1.33, sectionGap: 8.5, itemGap: 3.8 },
+  "nsut-placement": { fontStyle: "latex", fontSize: 12.7, lineHeight: 1.33, sectionGap: 8.5, itemGap: 3.8 },
+  "iit-placement": { fontStyle: "latex", fontSize: 12.7, lineHeight: 1.32, sectionGap: 8.2, itemGap: 3.6 },
+  "nit-placement": { fontStyle: "serif-pro", fontSize: 12.6, lineHeight: 1.33, sectionGap: 8.5, itemGap: 3.7 },
+  "iiit-placement": { fontStyle: "latex", fontSize: 12.7, lineHeight: 1.32, sectionGap: 8.3, itemGap: 3.6 },
+  "iisc-academic": { fontStyle: "executive", fontSize: 12.8, lineHeight: 1.37, sectionGap: 9.4, itemGap: 4.1 },
+  "igdtuw-placement": { fontStyle: "serif-pro", fontSize: 12.7, lineHeight: 1.34, sectionGap: 8.8, itemGap: 3.8 },
+  "bits-placement": { fontStyle: "modern", fontSize: 12.8, lineHeight: 1.35, sectionGap: 8.8, itemGap: 3.8 },
+  "iim-management": { fontStyle: "executive", fontSize: 12.8, lineHeight: 1.36, sectionGap: 9.2, itemGap: 4 },
+  "ggsipu-placement": { fontStyle: "classic", fontSize: 12.6, lineHeight: 1.33, sectionGap: 8.6, itemGap: 3.7 },
+  "ca-professional": { fontStyle: "executive", fontSize: 12.7, lineHeight: 1.35, sectionGap: 9, itemGap: 3.9 },
+};
+
+function computeResumeHealth(data: ReturnType<typeof useResumeStore.getState>["data"]): ResumeHealth {
+  const positives: string[] = [];
+  const warnings: string[] = [];
+  let score = 100;
+
+  if (data.name.trim() && data.email.trim() && data.phone.trim()) {
+    positives.push("Core contact details are present.");
+  } else {
+    warnings.push("Add full contact details (name, email, phone).");
+    score -= 12;
+  }
+
+  if (data.summary.trim().length >= 80) {
+    positives.push("Summary is detailed enough for recruiters.");
+  } else {
+    warnings.push("Write a stronger 2-line summary with role focus.");
+    score -= 10;
+  }
+
+  if (data.skills.length >= 10) {
+    positives.push("Skills section has good keyword depth.");
+  } else {
+    warnings.push("Add 10+ skills for better ATS keyword coverage.");
+    score -= 10;
+  }
+
+  const experienceBullets = data.experience.flatMap((item) => item.bullets.filter(Boolean));
+  if (experienceBullets.length >= 3) {
+    positives.push("Experience has multiple bullet points.");
+  } else {
+    warnings.push("Add at least 3 experience bullets with impact.");
+    score -= 12;
+  }
+
+  const metricBullets = [...experienceBullets, ...data.projects.flatMap((item) => item.bullets.filter(Boolean))].filter((line) =>
+    /\d|%|\$|x\b/i.test(line),
+  );
+
+  if (metricBullets.length >= 2) {
+    positives.push("Impact metrics detected in bullet points.");
+  } else {
+    warnings.push("Include numbers/percentages in bullets to show impact.");
+    score -= 10;
+  }
+
+  if (data.education.length > 0 && data.projects.length > 0) {
+    positives.push("Education and project sections are populated.");
+  } else {
+    warnings.push("Complete education and project sections.");
+    score -= 8;
+  }
+
+  if (warnings.length === 0) {
+    positives.push("Resume is market-ready and ATS-strong.");
+  }
+
+  return { score: Math.max(0, score), positives, warnings };
+}
 
 function toBullets(rawText: string) {
   return rawText
@@ -68,6 +421,7 @@ function toBullets(rawText: string) {
 function getResumePlainText(data: ReturnType<typeof useResumeStore.getState>["data"]) {
   const sections: string[] = [];
   sections.push(`Name: ${data.name}`);
+  sections.push(`College: ${data.collegeName}`);
   sections.push(`Contact: ${[data.email, data.phone, data.location, data.links].filter(Boolean).join(" | ")}`);
   sections.push(`Summary: ${data.summary}`);
   sections.push(
@@ -87,6 +441,10 @@ function getResumePlainText(data: ReturnType<typeof useResumeStore.getState>["da
   );
   sections.push(`Skills: ${data.skills.join(", ")}`);
   sections.push(`Achievements: ${data.achievements.map((item) => `${item.title} ${item.details}`).join("; ")}`);
+  sections.push(`CA Articleship: ${data.caArticleship.join("; ")}`);
+  sections.push(`CA Audit Experience: ${data.caAuditExperience.join("; ")}`);
+  sections.push(`CA Taxation & Compliance: ${data.caTaxationAndCompliance.join("; ")}`);
+  sections.push(`CA Tools: ${data.caTools.join("; ")}`);
   return sections.join("\n");
 }
 
@@ -121,17 +479,28 @@ function Builder() {
     updateAchievement,
     updateSkillsFromText,
     updateSimpleListFromText,
+    resetDraft,
   } = useResumeStore();
   const [searchParams] = useSearchParams();
-  const activeTemplateConfig = TEMPLATE_FORM_CONFIG[template];
+  const safeTemplate: ResumeTemplate = TEMPLATE_FORM_CONFIG[template] ? template : "jake";
+  const activeTemplateConfig = TEMPLATE_FORM_CONFIG[safeTemplate];
+
+  useEffect(() => {
+    if (template !== safeTemplate) {
+      setTemplate(safeTemplate);
+    }
+  }, [template, safeTemplate, setTemplate]);
 
   const [loadingKey, setLoadingKey] = useState<string>("");
   const [suggestion, setSuggestion] = useState<SuggestionState | null>(null);
   const [jdText, setJdText] = useState("");
   const [jdResult, setJdResult] = useState("");
   const [grammarInput, setGrammarInput] = useState("");
+  const [recruiterContext, setRecruiterContext] = useState("");
+  const [recruiterResult, setRecruiterResult] = useState("");
   const [message, setMessage] = useState("");
   const [debouncedData, setDebouncedData] = useState(data);
+  const [skillsInput, setSkillsInput] = useState("");
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -143,17 +512,96 @@ function Builder() {
 
   useEffect(() => {
     const fromQuery = searchParams.get("template") as ResumeTemplate | null;
+    const fresh = searchParams.get("fresh") === "1";
     if (!fromQuery) return;
-    if (["jake", "classic-logo", "table-edu", "modern-clean"].includes(fromQuery)) {
+
+    const allowedTemplates: ResumeTemplate[] = [
+      "jake",
+      "classic-logo",
+      "table-edu",
+      "modern-clean",
+      "dtu-placement",
+      "nsut-placement",
+      "iit-placement",
+      "nit-placement",
+      "iiit-placement",
+      "iisc-academic",
+      "igdtuw-placement",
+      "bits-placement",
+      "iim-management",
+      "ggsipu-placement",
+      "ca-professional",
+    ];
+
+    if (!allowedTemplates.includes(fromQuery)) return;
+
+    let applied = false;
+    const applyTemplateFromQuery = () => {
+      if (applied) return;
+      applied = true;
+      if (fresh) resetDraft();
       setTemplate(fromQuery);
+      setLayout(TEMPLATE_LAYOUT_PRESETS[fromQuery]);
+    };
+
+    const persistApi = (useResumeStore as unknown as {
+      persist?: {
+        hasHydrated: () => boolean;
+        onFinishHydration: (listener: () => void) => () => void;
+      };
+    }).persist;
+
+    if (!persistApi) {
+      applyTemplateFromQuery();
+      return;
     }
-  }, [searchParams, setTemplate]);
+
+    if (persistApi.hasHydrated()) {
+      applyTemplateFromQuery();
+      return;
+    }
+
+    const unsubscribe = persistApi.onFinishHydration(() => {
+      applyTemplateFromQuery();
+    });
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, [searchParams, setTemplate, setLayout, resetDraft]);
+
+  const applyTemplate = (nextTemplate: ResumeTemplate) => {
+    setTemplate(nextTemplate);
+    setLayout(TEMPLATE_LAYOUT_PRESETS[nextTemplate]);
+    const resolvedLogo = resolveDefaultLogo(nextTemplate, data.collegeName);
+    if (resolvedLogo) {
+      updateRootField("logoDataUrl", resolvedLogo);
+    }
+  };
+
+  useEffect(() => {
+    const resolvedLogo = resolveDefaultLogo(safeTemplate, data.collegeName);
+    if (!resolvedLogo) return;
+    if (data.logoDataUrl !== resolvedLogo) {
+      updateRootField("logoDataUrl", resolvedLogo);
+    }
+  }, [safeTemplate, data.collegeName, data.logoDataUrl, updateRootField]);
 
   const skillsText = useMemo(() => data.skills.join(", "), [data.skills]);
   const certText = useMemo(() => data.certifications.join("\n"), [data.certifications]);
   const positionsText = useMemo(() => data.positions.join("\n"), [data.positions]);
+  const caArticleshipText = useMemo(() => data.caArticleship.join("\n"), [data.caArticleship]);
+  const caAuditText = useMemo(() => data.caAuditExperience.join("\n"), [data.caAuditExperience]);
+  const caTaxText = useMemo(() => data.caTaxationAndCompliance.join("\n"), [data.caTaxationAndCompliance]);
+  const caToolsText = useMemo(() => data.caTools.join("\n"), [data.caTools]);
+  const resumeHealth = useMemo(() => computeResumeHealth(data), [data]);
+  const collegeOptions = TEMPLATE_COLLEGE_OPTIONS[safeTemplate] ?? [];
 
-  const callImprove = async (payload: { mode: "experience" | "summary" | "grammar"; input: string }) => {
+  useEffect(() => {
+    setSkillsInput(skillsText);
+  }, [skillsText]);
+
+  const callImprove = async (payload: { mode: "experience" | "summary" | "grammar" | "recruiter"; input: string }) => {
     setLoadingKey(payload.mode + payload.input.slice(0, 12));
     setMessage("");
     try {
@@ -209,25 +657,118 @@ function Builder() {
         await document.fonts.ready;
       }
 
-      const canvas = await html2canvas(source, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        width: 794,
-        height: 1122,
-        scrollX: 0,
-        scrollY: 0,
-      });
+      const maxPdfBytes = 2 * 1024 * 1024;
+      const allowMultiPage = safeTemplate === "ca-professional";
+      const exportHeight = allowMultiPage ? Math.max(1122, source.scrollHeight) : 1122;
+      const exportNode = source.cloneNode(true) as HTMLDivElement;
+      exportNode.style.width = "794px";
+      exportNode.style.minHeight = `${exportHeight}px`;
+      exportNode.style.maxHeight = allowMultiPage ? "none" : `${exportHeight}px`;
+      exportNode.style.overflow = allowMultiPage ? "visible" : "hidden";
+      exportNode.style.padding = "28px 30px";
+      exportNode.style.margin = "0";
+      exportNode.style.borderRadius = "0";
+      exportNode.style.border = "0";
+      exportNode.style.transform = "none";
+      exportNode.style.boxShadow = "none";
+      exportNode.style.position = "fixed";
+      exportNode.style.left = "-10000px";
+      exportNode.style.top = "0";
+      exportNode.style.zIndex = "-1";
 
-      const imageData = canvas.toDataURL("image/png", 1);
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt",
-        format: "a4",
-      });
+      document.body.appendChild(exportNode);
 
-      pdf.addImage(imageData, "PNG", 0, 0, 595.28, 841.89, undefined, "FAST");
-      pdf.save(`${(data.name || "resume").replace(/\s+/g, "-").toLowerCase()}.pdf`);
+      let baseCanvas: HTMLCanvasElement;
+      try {
+        baseCanvas = await html2canvas(exportNode, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          width: 794,
+          height: exportHeight,
+          scrollX: 0,
+          scrollY: 0,
+        });
+      } finally {
+        document.body.removeChild(exportNode);
+      }
+
+      const downscaleSteps = [1, 0.92, 0.85, 0.78, 0.7, 0.62, 0.55];
+      const qualitySteps = [0.82, 0.76, 0.7, 0.64, 0.58, 0.52, 0.45];
+
+      let selectedPdf: jsPDF | null = null;
+      let selectedSize = Number.POSITIVE_INFINITY;
+
+      for (let index = 0; index < downscaleSteps.length; index += 1) {
+        const ratio = downscaleSteps[index];
+        const quality = qualitySteps[index];
+
+        const exportCanvas = document.createElement("canvas");
+        exportCanvas.width = Math.max(1, Math.round(baseCanvas.width * ratio));
+        exportCanvas.height = Math.max(1, Math.round(baseCanvas.height * ratio));
+
+        const context = exportCanvas.getContext("2d");
+        if (!context) {
+          throw new Error("Failed to initialize PDF canvas context");
+        }
+
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+        context.drawImage(baseCanvas, 0, 0, exportCanvas.width, exportCanvas.height);
+
+        const imageData = exportCanvas.toDataURL("image/jpeg", quality);
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "pt",
+          format: "a4",
+          compress: true,
+        });
+
+        if (allowMultiPage) {
+          const pageWidth = 595.28;
+          const pageHeight = 841.89;
+          const imageHeight = (exportCanvas.height * pageWidth) / exportCanvas.width;
+
+          let heightLeft = imageHeight;
+          let position = 0;
+
+          pdf.addImage(imageData, "JPEG", 0, position, pageWidth, imageHeight, undefined, "FAST");
+          heightLeft -= pageHeight;
+
+          while (heightLeft > 0) {
+            position = heightLeft - imageHeight;
+            pdf.addPage();
+            pdf.addImage(imageData, "JPEG", 0, position, pageWidth, imageHeight, undefined, "FAST");
+            heightLeft -= pageHeight;
+          }
+        } else {
+          pdf.addImage(imageData, "JPEG", 0, 0, 595.28, 841.89, undefined, "FAST");
+        }
+        const blob = pdf.output("blob");
+
+        if (blob.size < selectedSize) {
+          selectedPdf = pdf;
+          selectedSize = blob.size;
+        }
+
+        if (blob.size <= maxPdfBytes) {
+          selectedPdf = pdf;
+          selectedSize = blob.size;
+          break;
+        }
+      }
+
+      if (!selectedPdf) {
+        throw new Error("Unable to generate PDF");
+      }
+
+      if (selectedSize > maxPdfBytes) {
+        throw new Error("Could not generate a PDF under 2 MB. Reduce logo resolution or trim content and try again.");
+      }
+
+      selectedPdf.save(`${(data.name || "resume").replace(/\s+/g, "-").toLowerCase()}.pdf`);
+      const finalSizeMb = (selectedSize / (1024 * 1024)).toFixed(2);
+      setMessage(`PDF generated at ${finalSizeMb} MB.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Failed to generate PDF");
     }
@@ -246,6 +787,28 @@ function Builder() {
       setMessage(error instanceof Error ? error.message : "JD analysis failed");
     } finally {
       setLoadingKey("");
+    }
+  };
+
+  const runRecruiterSimulation = async () => {
+    const context = recruiterContext.trim();
+    const resumeText = getResumePlainText(data);
+    const promptInput = context
+      ? `Target role/context: ${context}\n\n${resumeText}`
+      : `Target role/context: General software internship\n\n${resumeText}`;
+
+    const value = await callImprove({ mode: "recruiter", input: promptInput });
+    if (!value) return;
+    setRecruiterResult(value);
+  };
+
+  const copyResumeText = async () => {
+    try {
+      const text = getResumePlainText(data);
+      await navigator.clipboard.writeText(text);
+      setMessage("Resume text copied.");
+    } catch {
+      setMessage("Could not copy to clipboard.");
     }
   };
 
@@ -306,7 +869,56 @@ function Builder() {
             </p>
           </header>
 
-          <TemplateSelector value={template} onChange={setTemplate} />
+          <TemplateSelector value={safeTemplate} onChange={applyTemplate} />
+
+          <FormSection title="Resume Quality Score">
+            <div className="rounded border border-slate-200 bg-white p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-sm font-semibold text-slate-800">Current Score</span>
+                <span className="text-sm font-bold text-indigo-700">{resumeHealth.score}/100</span>
+              </div>
+              <div className="h-2.5 w-full overflow-hidden rounded bg-slate-200">
+                <div
+                  className="h-full rounded bg-indigo-600 transition-all"
+                  style={{ width: `${Math.max(6, resumeHealth.score)}%` }}
+                />
+              </div>
+
+              {resumeHealth.warnings.length > 0 && (
+                <div className="mt-3 rounded border border-amber-200 bg-amber-50 p-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-amber-800">Improve Next</h3>
+                  <ul className="mt-1 list-disc space-y-1 pl-4 text-xs text-amber-900">
+                    {resumeHealth.warnings.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-3 rounded border border-emerald-200 bg-emerald-50 p-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-emerald-800">Strengths</h3>
+                <ul className="mt-1 list-disc space-y-1 pl-4 text-xs text-emerald-900">
+                  {resumeHealth.positives.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </FormSection>
+
+          <FormSection title="Recruiter Simulation Score">
+            <p className="text-xs text-slate-600">
+              30-second recruiter screen with shortlist decision, top concerns, and fast fixes.
+            </p>
+            <textarea
+              className="mt-2 h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+              placeholder="Optional target role/context (e.g., SDE Intern, Backend Engineer)"
+              value={recruiterContext}
+              onChange={(event) => setRecruiterContext(event.target.value)}
+            />
+            <AIButton label="Run Recruiter Simulation" loading={loadingKey.startsWith("recruiter")} onClick={runRecruiterSimulation} />
+            {recruiterResult && <pre className="whitespace-pre-wrap rounded bg-gray-50 p-3 text-xs leading-5">{recruiterResult}</pre>}
+          </FormSection>
 
           <FormSection title="Name + Contact">
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -341,6 +953,23 @@ function Builder() {
               value={data.links}
               onChange={(event) => updateRootField("links", event.target.value)}
             />
+            {collegeOptions.length > 0 && (
+              <label className="block text-xs font-medium text-slate-700">
+                College name
+                <select
+                  className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm"
+                  value={data.collegeName}
+                  onChange={(event) => updateRootField("collegeName", event.target.value)}
+                >
+                  <option value="">Select college</option>
+                  {collegeOptions.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
             {activeTemplateConfig.supportsLogo && (
               <>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
@@ -603,8 +1232,9 @@ function Builder() {
             <textarea
               className="h-20 w-full rounded border border-gray-300 px-3 py-2 text-sm"
               placeholder="Comma separated skills"
-              value={skillsText}
-              onChange={(event) => updateSkillsFromText(event.target.value)}
+              value={skillsInput}
+              onChange={(event) => setSkillsInput(event.target.value)}
+              onBlur={(event) => updateSkillsFromText(event.target.value)}
             />
           </FormSection>
 
@@ -645,6 +1275,35 @@ function Builder() {
                 placeholder="One position per line"
                 value={positionsText}
                 onChange={(event) => updateSimpleListFromText("positions", event.target.value)}
+              />
+            </FormSection>
+          )}
+
+          {safeTemplate === "ca-professional" && (
+            <FormSection title="CA Domain Sections">
+              <textarea
+                className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Articleship highlights (one line per entry)"
+                value={caArticleshipText}
+                onChange={(event) => updateSimpleListFromText("caArticleship", event.target.value)}
+              />
+              <textarea
+                className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Audit / assurance assignments (one line per entry)"
+                value={caAuditText}
+                onChange={(event) => updateSimpleListFromText("caAuditExperience", event.target.value)}
+              />
+              <textarea
+                className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Taxation & compliance work (one line per entry)"
+                value={caTaxText}
+                onChange={(event) => updateSimpleListFromText("caTaxationAndCompliance", event.target.value)}
+              />
+              <textarea
+                className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Tools (Tally, Excel, SAP, Zoho, etc.) - one per line"
+                value={caToolsText}
+                onChange={(event) => updateSimpleListFromText("caTools", event.target.value)}
               />
             </FormSection>
           )}
@@ -694,6 +1353,9 @@ function Builder() {
             >
               Download 1-Page PDF
             </button>
+            <button className="rounded border border-slate-300 px-3 py-2 text-xs text-slate-700" onClick={copyResumeText}>
+              Copy Text
+            </button>
             <button className="rounded border border-blue-500 px-3 py-2 text-xs font-semibold text-blue-700" onClick={applyOnePage}>
               Make it 1-page
             </button>
@@ -715,10 +1377,10 @@ function Builder() {
               </select>
             </label>
             <label className="ml-auto flex items-center gap-2 text-xs font-medium text-slate-700">
-              Font style
+              Font family
               <select
                 className="rounded border border-slate-300 bg-white px-2 py-1.5 text-xs"
-                value={layout.fontStyle ?? "latex"}
+                value={layout.fontStyle ?? "serif-pro"}
                 onChange={(event) => setLayout({ fontStyle: event.target.value as ResumeFontStyle })}
               >
                 {FONT_STYLE_OPTIONS.map((option) => (
@@ -730,7 +1392,7 @@ function Builder() {
             </label>
           </div>
           <div className="preview-canvas overflow-auto rounded-lg border border-slate-200 bg-gradient-to-b from-slate-100 to-slate-200 p-4">
-            <ResumePreview data={debouncedData} layout={layout} template={template} ref={previewRef} />
+            <ResumePreview data={debouncedData} layout={layout} template={safeTemplate} ref={previewRef} />
           </div>
         </section>
       </div>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#F8FAFC"/>
+  <rect x="70" y="48" width="1060" height="579" rx="20" fill="white" stroke="#0F172A" stroke-opacity="0.12"/>
+  <rect x="110" y="92" width="980" height="74" rx="10" fill="#E2E8F0"/>
+  <text x="130" y="140" fill="#0F172A" font-family="Georgia, serif" font-size="34" font-weight="700">IIT Placement Style</text>
+  <rect x="110" y="198" width="250" height="16" rx="8" fill="#F97316" fill-opacity="0.23"/>
+  <rect x="110" y="230" width="980" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="254" width="920" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="294" width="260" height="16" rx="8" fill="#F97316" fill-opacity="0.23"/>
+  <rect x="110" y="326" width="980" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="350" width="940" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="390" width="230" height="16" rx="8" fill="#F97316" fill-opacity="0.23"/>
+  <rect x="110" y="422" width="980" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="446" width="900" height="8" rx="4" fill="#CBD5E1"/>
+</svg>

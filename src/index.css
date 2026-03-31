@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=STIX+Two+Text:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=STIX+Two+Text:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=EB+Garamond:wght@400;500;600;700&family=Merriweather:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -29,10 +29,10 @@ body {
   max-height: 1122px;
   background: #fff;
   margin: 0 auto;
-  padding: 28px 30px;
+  padding: 26px 32px;
   overflow: hidden;
   box-sizing: border-box;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 
 .app-glass {
@@ -53,60 +53,399 @@ body {
   font-family: var(--resume-font-family, "Latin Modern Roman", "Computer Modern Serif", "STIX Two Text", "Times New Roman", serif);
   font-size: var(--resume-font-size, 12px);
   line-height: var(--resume-line-height, 1.45);
+  letter-spacing: 0.01px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.resume,
+.resume * {
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .name {
   margin: 0;
-  font-size: calc(var(--resume-font-size, 12px) * 1.8);
+  font-size: calc(var(--resume-font-size, 12px) * 1.78);
   font-weight: 700;
+  letter-spacing: 0.18px;
 }
 
 .contact {
-  margin: 4px 0 8px;
+  margin: 2px 0 0;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  font-size: calc(var(--resume-font-size, 12px) * 0.96);
+  line-height: 1.28;
+}
+
+.contact span,
+.contact a {
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
+.contact-block {
+  margin-top: 4px;
+}
+
+.contact-links {
+  margin-top: 1px;
+}
+
 .resume section {
-  margin-top: var(--resume-section-gap, 12px);
+  margin-top: var(--resume-section-gap, 8px);
 }
 
 .resume h2 {
   margin: 0 0 4px;
-  font-size: calc(var(--resume-font-size, 12px) * 1.14);
+  font-size: calc(var(--resume-font-size, 12px) * 1.04);
   font-weight: 700;
-  letter-spacing: 0.4px;
-  border-bottom: 1px solid #000;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 0;
+}
+
+.resume h2::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid #000;
+  transform: translateY(0.5px);
 }
 
 .item {
-  margin-top: var(--resume-item-gap, 6px);
+  margin-top: var(--resume-item-gap, 3px);
 }
 
 .row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 8px;
+  align-items: baseline;
+  width: 100%;
 }
 
 .title {
   font-weight: 700;
+  min-width: 0;
 }
 
 .date {
   white-space: nowrap;
+  font-size: calc(var(--resume-font-size, 12px) * 0.95);
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 2px;
 }
 
 .resume p {
-  margin: 2px 0;
+  margin: 1px 0;
+  overflow-wrap: anywhere;
+}
+
+.meta-line {
+  font-weight: 500;
+}
+
+.detail-line {
+  color: #111;
 }
 
 .resume ul {
   margin: 2px 0 0;
-  padding-left: 16px;
+  padding-left: 14px;
 }
 
 .resume li {
-  margin: 0;
+  margin: 0 0 1px;
+  overflow-wrap: anywhere;
+}
+
+.resume-header {
+  border-bottom: 1px solid #000;
+  padding-bottom: 5px;
+  margin-bottom: 1px;
+}
+
+.resume-header-latex {
+  text-align: center;
+}
+
+.resume-header-latex .contact {
+  margin-top: 3px;
+}
+
+.resume-header-modern {
+  text-align: left;
+}
+
+.resume-header-academic {
+  text-align: left;
+}
+
+.resume-header-academic .resume-header-top {
+  align-items: flex-end;
+}
+
+.resume-header-academic .resume-header-right {
+  max-width: 64%;
+}
+
+.resume-header-academic .contact {
+  margin-top: 0;
+  text-align: right;
+}
+
+.resume-header-logo {
+  display: block;
+}
+
+.resume-header-logo img.logo-hidden {
+  display: none;
+}
+
+.resume-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.resume-header-identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.resume-header-text {
+  min-width: 0;
+}
+
+.resume-header-right {
+  text-align: right;
+  max-width: 54%;
+}
+
+.template-jake .resume-header {
+  border-bottom-style: solid;
+}
+
+.template-dtu-placement .resume-header,
+.template-nsut-placement .resume-header,
+.template-iit-placement .resume-header,
+.template-nit-placement .resume-header,
+.template-iiit-placement .resume-header,
+.template-ggsipu-placement .resume-header,
+.template-bits-placement .resume-header,
+.template-igdtuw-placement .resume-header {
+  border-bottom-width: 1.2px;
+}
+
+.template-dtu-placement h2::after,
+.template-nsut-placement h2::after,
+.template-iit-placement h2::after,
+.template-nit-placement h2::after,
+.template-iiit-placement h2::after,
+.template-ggsipu-placement h2::after,
+.template-bits-placement h2::after,
+.template-igdtuw-placement h2::after {
+  border-top-color: #334155;
+}
+
+.template-iit-placement h2,
+.template-nit-placement h2,
+.template-dtu-placement h2,
+.template-nsut-placement h2,
+.template-ggsipu-placement h2,
+.template-bits-placement h2,
+.template-igdtuw-placement h2 {
+  letter-spacing: 0.7px;
+  font-size: calc(var(--resume-font-size, 12px) * 1.02);
+  margin-bottom: 3px;
+}
+
+.template-iiit-placement h2 {
+  letter-spacing: 0.8px;
+  font-size: calc(var(--resume-font-size, 12px) * 1.01);
+}
+
+.template-dtu-placement h2,
+.template-nsut-placement h2,
+.template-iit-placement h2,
+.template-nit-placement h2,
+.template-iiit-placement h2,
+.template-ggsipu-placement h2 {
+  padding: 2px 6px;
+  border-top: 1px solid #334155;
+  border-bottom: 1px solid #334155;
+  background: #f1f5f9;
+}
+
+.template-dtu-placement h2::after,
+.template-nsut-placement h2::after,
+.template-iit-placement h2::after,
+.template-iiit-placement h2::after,
+.template-ggsipu-placement h2::after {
+  display: none;
+}
+
+.template-iisc-academic .resume-header {
+  border-bottom-width: 1.4px;
+  border-bottom-color: #111827;
+}
+
+.template-iisc-academic h2 {
+  text-transform: none;
+  letter-spacing: 0.55px;
+  font-size: calc(var(--resume-font-size, 12px) * 1);
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 2px;
+}
+
+.template-iisc-academic h2::after {
+  display: none;
+}
+
+.template-iisc-academic .name,
+.template-ca-professional .name,
+.template-iim-management .name {
+  letter-spacing: 0.05px;
+}
+
+.template-iisc-academic .section-placeholder,
+.template-dtu-placement .section-placeholder,
+.template-nsut-placement .section-placeholder,
+.template-iit-placement .section-placeholder,
+.template-nit-placement .section-placeholder,
+.template-iiit-placement .section-placeholder,
+.template-igdtuw-placement .section-placeholder,
+.template-bits-placement .section-placeholder,
+.template-ggsipu-placement .section-placeholder,
+.template-iim-management .section-placeholder,
+.template-ca-professional .section-placeholder {
+  min-height: 14px;
+}
+
+.template-dtu-placement .section-placeholder h2,
+.template-nsut-placement .section-placeholder h2,
+.template-iit-placement .section-placeholder h2,
+.template-nit-placement .section-placeholder h2,
+.template-iiit-placement .section-placeholder h2,
+.template-ggsipu-placement .section-placeholder h2 {
+  opacity: 0.88;
+}
+
+.template-dtu-placement .resume-header,
+.template-nsut-placement .resume-header,
+.template-iit-placement .resume-header,
+.template-nit-placement .resume-header,
+.template-iiit-placement .resume-header,
+.template-ggsipu-placement .resume-header,
+.template-bits-placement .resume-header,
+.template-igdtuw-placement .resume-header,
+.template-iim-management .resume-header,
+.template-iisc-academic .resume-header {
+  margin-bottom: 4px;
+}
+
+.template-dtu-placement .name,
+.template-nsut-placement .name,
+.template-iit-placement .name,
+.template-nit-placement .name,
+.template-iiit-placement .name,
+.template-ggsipu-placement .name,
+.template-bits-placement .name,
+.template-igdtuw-placement .name,
+.template-iisc-academic .name,
+.template-iim-management .name {
+  text-transform: uppercase;
+  font-size: calc(var(--resume-font-size, 12px) * 1.65);
+  letter-spacing: 0.24px;
+}
+
+.template-dtu-placement .contact,
+.template-nsut-placement .contact,
+.template-iit-placement .contact,
+.template-nit-placement .contact,
+.template-iiit-placement .contact,
+.template-ggsipu-placement .contact,
+.template-bits-placement .contact,
+.template-igdtuw-placement .contact,
+.template-iisc-academic .contact,
+.template-iim-management .contact {
+  font-size: calc(var(--resume-font-size, 12px) * 0.9);
+}
+
+.template-dtu-placement .resume-header-identity,
+.template-nsut-placement .resume-header-identity,
+.template-iit-placement .resume-header-identity,
+.template-nit-placement .resume-header-identity,
+.template-iiit-placement .resume-header-identity,
+.template-ggsipu-placement .resume-header-identity,
+.template-bits-placement .resume-header-identity,
+.template-igdtuw-placement .resume-header-identity,
+.template-iisc-academic .resume-header-identity,
+.template-iim-management .resume-header-identity {
+  align-items: center;
+  gap: 12px;
+}
+
+.template-dtu-placement .resume-header-identity img,
+.template-nsut-placement .resume-header-identity img,
+.template-iit-placement .resume-header-identity img,
+.template-nit-placement .resume-header-identity img,
+.template-iiit-placement .resume-header-identity img,
+.template-ggsipu-placement .resume-header-identity img,
+.template-bits-placement .resume-header-identity img,
+.template-igdtuw-placement .resume-header-identity img,
+.template-iisc-academic .resume-header-identity img,
+.template-iim-management .resume-header-identity img {
+  border-radius: 2px;
+}
+
+.template-iim-management .resume-header,
+.template-ca-professional .resume-header {
+  border-bottom-color: #111827;
+}
+
+.template-iim-management h2,
+.template-ca-professional h2 {
+  font-size: calc(var(--resume-font-size, 12px) * 0.98);
+  letter-spacing: 0.5px;
+}
+
+.template-iim-management h2::after,
+.template-ca-professional h2::after {
+  border-top-color: #1f2937;
+}
+
+.template-modern-clean h2::after,
+.template-classic-logo h2::after,
+.template-table-edu h2::after,
+.template-jake h2::after {
+  border-top-color: #000;
+}
+
+.summary-line {
+  margin: 3px 0 0;
+  font-size: calc(var(--resume-font-size, 12px) * 0.98);
+  line-height: 1.32;
+}
+
+.summary-block {
+  margin-top: 4px;
+}
+
+.font-latex {
+  --resume-font-size: 12px;
+  --resume-line-height: 1.34;
+  --resume-section-gap: 9px;
+  --resume-item-gap: 4px;
 }
 
 @media (max-width: 1280px) {

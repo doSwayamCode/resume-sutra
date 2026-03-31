@@ -94,7 +94,7 @@ var readBody = function (req) { return __awaiter(void 0, void 0, void 0, functio
                 catch (_f) {
                     if (raw.startsWith("\"") && raw.endsWith("\"")) {
                         try {
-                            return [2 /*return*/, JSON.parse(raw.slice(1, -1).replace(/\\\"/g, "\""))];
+                            return [2 /*return*/, JSON.parse(raw.slice(1, -1).replace(/\\"/g, "\""))];
                         }
                         catch (_g) {
                             return [2 /*return*/, {}];
@@ -117,6 +117,9 @@ var improvePrompt = function (mode, input) {
     }
     if (mode === "summary") {
         return "Rewrite this into a professional 2-line resume summary.\nKeep it concise, impactful, and role-focused.\n\nInput:\n".concat(input);
+    }
+    if (mode === "recruiter") {
+        return "You are a recruiter doing a strict 30-second resume screen.\nBased on the resume text below, respond in exactly this format:\nWould shortlist?: Yes/No\nTop 3 concerns:\n1) ...\n2) ...\n3) ...\nFast fixes:\n1) ...\n2) ...\n3) ...\n\nKeep each point short and practical.\n\nResume Text:\n".concat(input);
     }
     return "Improve this sentence by replacing weak verbs with strong action verbs and making it more impactful and concise:\n\n".concat(input);
 };

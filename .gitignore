@@ -17,3 +17,5 @@ Thumbs.db
 api/*.js
 api/*.d.ts
 api/*.map
+vite.config.js
+vite.config.d.ts

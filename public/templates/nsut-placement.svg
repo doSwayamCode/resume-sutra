@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#F8FAFC"/>
+  <rect x="70" y="48" width="1060" height="579" rx="20" fill="white" stroke="#0F172A" stroke-opacity="0.12"/>
+  <rect x="110" y="92" width="980" height="86" rx="10" fill="#E2E8F0"/>
+  <text x="130" y="145" fill="#0F172A" font-family="Georgia, serif" font-size="34" font-weight="700">NSUT Placement Style</text>
+  <rect x="110" y="214" width="330" height="16" rx="8" fill="#22C55E" fill-opacity="0.22"/>
+  <rect x="110" y="248" width="980" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="272" width="940" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="320" width="300" height="16" rx="8" fill="#22C55E" fill-opacity="0.22"/>
+  <rect x="110" y="354" width="980" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="378" width="900" height="8" rx="4" fill="#CBD5E1"/>
+  <rect x="110" y="426" width="290" height="16" rx="8" fill="#22C55E" fill-opacity="0.22"/>
+  <rect x="110" y="460" width="980" height="8" rx="4" fill="#CBD5E1"/>
+</svg>

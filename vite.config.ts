@@ -15,7 +15,7 @@ const readBody = async (req: IncomingMessage) => {
   } catch {
     if (raw.startsWith("\"") && raw.endsWith("\"")) {
       try {
-        return JSON.parse(raw.slice(1, -1).replace(/\\\"/g, "\""));
+        return JSON.parse(raw.slice(1, -1).replace(/\\"/g, "\""));
       } catch {
         return {};
       }
@@ -31,13 +31,17 @@ const readBody = async (req: IncomingMessage) => {
   }
 };
 
-const improvePrompt = (mode: "experience" | "summary" | "grammar", input: string) => {
+const improvePrompt = (mode: "experience" | "summary" | "grammar" | "recruiter", input: string) => {
   if (mode === "experience") {
     return `Rewrite the following into 2-3 strong ATS-friendly resume bullet points.\nUse action verbs, include measurable impact, keep concise and professional.\n\nInput:\n${input}\n\nOutput:\n* Bullet 1\n* Bullet 2\n* Bullet 3`;
   }
 
   if (mode === "summary") {
     return `Rewrite this into a professional 2-line resume summary.\nKeep it concise, impactful, and role-focused.\n\nInput:\n${input}`;
+  }
+
+  if (mode === "recruiter") {
+    return `You are a recruiter doing a strict 30-second resume screen.\nBased on the resume text below, respond in exactly this format:\nWould shortlist?: Yes/No\nTop 3 concerns:\n1) ...\n2) ...\n3) ...\nFast fixes:\n1) ...\n2) ...\n3) ...\n\nKeep each point short and practical.\n\nResume Text:\n${input}`;
   }
 
   return `Improve this sentence by replacing weak verbs with strong action verbs and making it more impactful and concise:\n\n${input}`;
@@ -56,7 +60,7 @@ const devApiPlugin = (groqKey: string): Plugin => ({
 
       try {
         const body = (await readBody(req)) as {
-          mode?: "experience" | "summary" | "grammar";
+          mode?: "experience" | "summary" | "grammar" | "recruiter";
           input?: string;
           jd?: string;
           resume?: string;

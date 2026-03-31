@@ -1,8 +1,23 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type ResumeTemplate = "jake" | "classic-logo" | "table-edu" | "modern-clean";
-export type ResumeFontStyle = "latex" | "classic" | "modern";
+export type ResumeTemplate =
+  | "jake"
+  | "classic-logo"
+  | "table-edu"
+  | "modern-clean"
+  | "dtu-placement"
+  | "nsut-placement"
+  | "iit-placement"
+  | "nit-placement"
+  | "iiit-placement"
+  | "iisc-academic"
+  | "igdtuw-placement"
+  | "bits-placement"
+  | "iim-management"
+  | "ggsipu-placement"
+  | "ca-professional";
+export type ResumeFontStyle = "latex" | "classic" | "modern" | "serif-pro" | "executive" | "clean-sans";
 
 export type EducationItem = {
   id: string;
@@ -38,6 +53,7 @@ export type AchievementItem = {
 
 export type ResumeData = {
   name: string;
+  collegeName: string;
   email: string;
   phone: string;
   location: string;
@@ -52,6 +68,10 @@ export type ResumeData = {
   achievements: AchievementItem[];
   certifications: string[];
   positions: string[];
+  caArticleship: string[];
+  caAuditExperience: string[];
+  caTaxationAndCompliance: string[];
+  caTools: string[];
 };
 
 type LayoutSettings = {
@@ -67,6 +87,7 @@ type ResumeStore = {
   data: ResumeData;
   layout: LayoutSettings;
   setTemplate: (template: ResumeTemplate) => void;
+  setData: (data: ResumeData) => void;
   updateRootField: <K extends keyof ResumeData>(field: K, value: ResumeData[K]) => void;
   addEducation: () => void;
   removeEducation: (id: string) => void;
@@ -89,9 +110,13 @@ type ResumeStore = {
   removeAchievement: (id: string) => void;
   updateAchievement: (id: string, field: keyof AchievementItem, value: string) => void;
   updateSkillsFromText: (value: string) => void;
-  updateSimpleListFromText: (field: "certifications" | "positions", value: string) => void;
+  updateSimpleListFromText: (
+    field: "certifications" | "positions" | "caArticleship" | "caAuditExperience" | "caTaxationAndCompliance" | "caTools",
+    value: string,
+  ) => void;
   setLayout: (partial: Partial<LayoutSettings> | ((prev: LayoutSettings) => Partial<LayoutSettings>)) => void;
   resetLayout: () => void;
+  resetDraft: () => void;
 };
 
 const makeId = () =>
@@ -100,15 +125,16 @@ const makeId = () =>
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 const defaultLayout: LayoutSettings = {
-  fontSize: 13.8,
-  lineHeight: 1.52,
-  sectionGap: 12,
-  itemGap: 6,
-  fontStyle: "latex",
+  fontSize: 12.8,
+  lineHeight: 1.34,
+  sectionGap: 9,
+  itemGap: 4,
+  fontStyle: "serif-pro",
 };
 
 const defaultData: ResumeData = {
   name: "",
+  collegeName: "",
   email: "",
   phone: "",
   location: "",
@@ -123,6 +149,138 @@ const defaultData: ResumeData = {
   achievements: [],
   certifications: [],
   positions: [],
+  caArticleship: [],
+  caAuditExperience: [],
+  caTaxationAndCompliance: [],
+  caTools: [],
+};
+
+const ALLOWED_TEMPLATES: ResumeTemplate[] = [
+  "jake",
+  "classic-logo",
+  "table-edu",
+  "modern-clean",
+  "dtu-placement",
+  "nsut-placement",
+  "iit-placement",
+  "nit-placement",
+  "iiit-placement",
+  "iisc-academic",
+  "igdtuw-placement",
+  "bits-placement",
+  "iim-management",
+  "ggsipu-placement",
+  "ca-professional",
+];
+
+const ALLOWED_FONT_STYLES: ResumeFontStyle[] = ["latex", "classic", "modern", "serif-pro", "executive", "clean-sans"];
+
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
+
+const toStringValue = (value: unknown): string => (typeof value === "string" ? value : "");
+
+const toStringArray = (value: unknown): string[] => (Array.isArray(value) ? value.map((item) => String(item ?? "")) : []);
+
+const normalizeTemplate = (value: unknown): ResumeTemplate =>
+  ALLOWED_TEMPLATES.includes(value as ResumeTemplate) ? (value as ResumeTemplate) : "jake";
+
+const normalizeFontStyle = (value: unknown): ResumeFontStyle =>
+  ALLOWED_FONT_STYLES.includes(value as ResumeFontStyle) ? (value as ResumeFontStyle) : "serif-pro";
+
+const normalizeEducation = (value: unknown): EducationItem[] => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(isRecord)
+    .map((item) => ({
+      id: toStringValue(item.id) || makeId(),
+      school: toStringValue(item.school),
+      degree: toStringValue(item.degree),
+      details: toStringValue(item.details),
+      startDate: toStringValue(item.startDate),
+      endDate: toStringValue(item.endDate),
+    }));
+};
+
+const normalizeExperience = (value: unknown): ExperienceItem[] => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(isRecord)
+    .map((item) => ({
+      id: toStringValue(item.id) || makeId(),
+      role: toStringValue(item.role),
+      company: toStringValue(item.company),
+      startDate: toStringValue(item.startDate),
+      endDate: toStringValue(item.endDate),
+      bullets: toStringArray(item.bullets),
+    }));
+};
+
+const normalizeProjects = (value: unknown): ProjectItem[] => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(isRecord)
+    .map((item) => ({
+      id: toStringValue(item.id) || makeId(),
+      name: toStringValue(item.name),
+      tech: toStringValue(item.tech),
+      link: toStringValue(item.link),
+      bullets: toStringArray(item.bullets),
+    }));
+};
+
+const normalizeAchievements = (value: unknown): AchievementItem[] => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(isRecord)
+    .map((item) => ({
+      id: toStringValue(item.id) || makeId(),
+      title: toStringValue(item.title),
+      details: toStringValue(item.details),
+    }));
+};
+
+const normalizeResumeData = (value: unknown): ResumeData => {
+  const raw = isRecord(value) ? value : {};
+  const logoSizeRaw = typeof raw.logoSize === "number" && Number.isFinite(raw.logoSize) ? raw.logoSize : defaultData.logoSize;
+
+  return {
+    name: toStringValue(raw.name),
+    collegeName: toStringValue(raw.collegeName),
+    email: toStringValue(raw.email),
+    phone: toStringValue(raw.phone),
+    location: toStringValue(raw.location),
+    links: toStringValue(raw.links),
+    logoDataUrl: toStringValue(raw.logoDataUrl),
+    logoSize: Math.max(48, Math.min(200, logoSizeRaw)),
+    summary: toStringValue(raw.summary),
+    education: normalizeEducation(raw.education),
+    experience: normalizeExperience(raw.experience),
+    projects: normalizeProjects(raw.projects),
+    skills: toStringArray(raw.skills),
+    achievements: normalizeAchievements(raw.achievements),
+    certifications: toStringArray(raw.certifications),
+    positions: toStringArray(raw.positions),
+    caArticleship: toStringArray(raw.caArticleship),
+    caAuditExperience: toStringArray(raw.caAuditExperience),
+    caTaxationAndCompliance: toStringArray(raw.caTaxationAndCompliance),
+    caTools: toStringArray(raw.caTools),
+  };
+};
+
+const normalizeLayout = (value: unknown): LayoutSettings => {
+  const raw = isRecord(value) ? value : {};
+  const fontSize = typeof raw.fontSize === "number" && Number.isFinite(raw.fontSize) ? raw.fontSize : defaultLayout.fontSize;
+  const lineHeight = typeof raw.lineHeight === "number" && Number.isFinite(raw.lineHeight) ? raw.lineHeight : defaultLayout.lineHeight;
+  const sectionGap = typeof raw.sectionGap === "number" && Number.isFinite(raw.sectionGap) ? raw.sectionGap : defaultLayout.sectionGap;
+  const itemGap = typeof raw.itemGap === "number" && Number.isFinite(raw.itemGap) ? raw.itemGap : defaultLayout.itemGap;
+
+  return {
+    fontSize: Math.max(12, fontSize),
+    lineHeight: Math.max(1.28, lineHeight),
+    sectionGap: Math.max(8, sectionGap),
+    itemGap: Math.max(3, itemGap),
+    fontStyle: normalizeFontStyle(raw.fontStyle),
+  };
 };
 
 export const useResumeStore = create<ResumeStore>()(
@@ -132,6 +290,8 @@ export const useResumeStore = create<ResumeStore>()(
       data: defaultData,
       layout: defaultLayout,
   setTemplate: (template) => set({ template }),
+  setData: (data) => set({ data: normalizeResumeData(data) }),
+  resetDraft: () => set({ data: defaultData, layout: defaultLayout }),
   updateRootField: (field, value) =>
     set((state) => ({
       data: {
@@ -423,6 +583,32 @@ export const useResumeStore = create<ResumeStore>()(
     }),
     {
       name: "resume-sutra-draft-v1",
+      version: 2,
+      migrate: (persistedState: unknown) => {
+        if (!persistedState || typeof persistedState !== "object") {
+          return persistedState as ResumeStore;
+        }
+
+        const state = persistedState as Partial<ResumeStore>;
+        return {
+          ...state,
+          template: normalizeTemplate(state.template),
+          data: normalizeResumeData(state.data),
+          layout: normalizeLayout(state.layout),
+        } as ResumeStore;
+      },
+      merge: (persistedState, currentState) => {
+        const persisted = isRecord(persistedState) ? persistedState : {};
+        const current = currentState as ResumeStore;
+
+        return {
+          ...current,
+          ...persisted,
+          template: normalizeTemplate(persisted.template),
+          data: normalizeResumeData(persisted.data),
+          layout: normalizeLayout(persisted.layout),
+        } as ResumeStore;
+      },
       partialize: (state) => ({
         template: state.template,
         data: state.data,

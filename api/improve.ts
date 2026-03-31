@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-type ImproveMode = "experience" | "summary" | "grammar";
+type ImproveMode = "experience" | "summary" | "grammar" | "recruiter";
 
 const promptByMode: Record<ImproveMode, string> = {
   experience:
@@ -9,6 +9,8 @@ const promptByMode: Record<ImproveMode, string> = {
     "Rewrite this into a professional 2-line resume summary. Keep it concise, impactful, and role-focused.\n\nInput:\n{user_text}",
   grammar:
     "Improve this sentence by replacing weak verbs with strong action verbs and making it more impactful and concise:\n\n{user_text}",
+  recruiter:
+    "You are a recruiter doing a strict 30-second resume screen. Based on the resume text below, respond in exactly this format:\nWould shortlist?: Yes/No\nTop 3 concerns:\n1) ...\n2) ...\n3) ...\nFast fixes:\n1) ...\n2) ...\n3) ...\n\nKeep each point short and practical.\n\nResume Text:\n{user_text}",
 };
 
 const MAX_INPUT_LENGTH = 4000;
@@ -117,7 +119,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     res.status(200).json({ suggestion });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Internal server error" });
   }
 }
