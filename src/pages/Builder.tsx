@@ -599,7 +599,9 @@ function Builder() {
 
   const getApiErrorMessage = (error: unknown, fallback: string) => {
     if (axios.isAxiosError(error)) {
-      const apiError = (error.response?.data as { error?: string } | undefined)?.error?.trim();
+      const errorData = error.response?.data as { error?: unknown; message?: unknown } | undefined;
+      const rawApiError = typeof errorData?.error === "string" ? errorData.error : errorData?.message;
+      const apiError = typeof rawApiError === "string" ? rawApiError.trim() : "";
       if (apiError) {
         if (apiError === "Missing GROQ_API_KEY") {
           return "AI is not configured on server. Add GROQ_API_KEY in Vercel Project Settings -> Environment Variables and redeploy.";
