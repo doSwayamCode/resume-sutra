@@ -871,6 +871,7 @@ function Builder() {
   return (
     <main className="min-h-screen px-3 py-4 lg:px-6 lg:py-6">
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 xl:grid-cols-[1.05fr_1fr]">
+        {/* Footer and counter intentionally omitted from Builder page */}
         <section className="space-y-4">
           <header className="app-glass rounded-xl border border-purple-100 p-4 shadow-md shadow-purple-100/40">
             <img

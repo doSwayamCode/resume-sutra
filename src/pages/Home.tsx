@@ -1,4 +1,6 @@
+
 import { Link } from "react-router-dom";
+// ...existing code...
 
 const coreTemplates = [
   {
@@ -124,111 +126,122 @@ const indiaCampusTemplates = [
 
 function Home() {
   return (
-    <main className="min-h-screen px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
-      <div className="mx-auto max-w-6xl space-y-8 sm:space-y-10">
-        <header className="flex items-center justify-center">
-          <img
-            src="/resumesutra-logo.svg"
-            alt="ResumeSutra logo"
-            className="h-auto w-full max-w-[250px] object-contain sm:max-w-[300px] md:max-w-[360px]"
-          />
-        </header>
+    <>
+      <main className="min-h-screen px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+        <div className="mx-auto max-w-6xl space-y-8 sm:space-y-10">
+          <header className="flex items-center justify-center">
+            <img
+              src="/resumesutra-logo.svg"
+              alt="ResumeSutra logo"
+              className="h-auto w-full max-w-[250px] object-contain sm:max-w-[300px] md:max-w-[360px]"
+            />
+          </header>
 
-        <section className="mx-auto max-w-4xl px-1 text-center sm:px-2">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-            Choose a Resume Format, Then Build It Line by Line
-          </h1>
-          <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">
-            ATS-friendly templates, live preview, AI bullet improvement, JD match scoring, and one-click PDF export.
-          </p>
-        </section>
+          <section className="mx-auto max-w-4xl px-1 text-center sm:px-2">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+              Choose a Resume Format, Then Build It Line by Line
+            </h1>
+            <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">
+              ATS-friendly templates, live preview, AI bullet improvement, JD match scoring, and one-click PDF export.
+            </p>
+          </section>
 
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">Core Templates</h2>
-            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Up to the mark</span>
-          </div>
-          <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {coreTemplates.map((template) => (
-              <article
-                key={template.key}
-                className="app-glass overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/50 transition hover:-translate-y-0.5 hover:shadow-xl"
-              >
-                <img src={template.image} alt={`${template.title} template preview`} className="h-56 w-full object-cover" />
-                <div className="space-y-3 p-5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-slate-900">{template.title}</h3>
-                    <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">{template.badge}</span>
-                  </div>
-                  <p className="text-sm text-slate-600">{template.description}</p>
-                  <Link
-                    to={`/builder?template=${template.key}&fresh=1`}
-                    className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-                  >
-                    Use This Template
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">India Campus Inspired Templates</h2>
-            <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">New</span>
-          </div>
-          <p className="text-sm text-slate-600">
-            Crafted from common public placement-format patterns shared by students and communities. These are clean, ATS-safe, copyright-clean
-            reinterpretations to help students learn structure quickly.
-          </p>
-          <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {indiaCampusTemplates.map((template) => (
-              <article
-                key={template.key}
-                className="app-glass overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/50 transition hover:-translate-y-0.5 hover:shadow-xl"
-              >
-                <img src={template.image} alt={`${template.title} template preview`} className="h-56 w-full object-cover" />
-                <div className="space-y-3 p-5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-slate-900">{template.title}</h3>
-                    <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700">Campus</span>
-                  </div>
-                  <p className="text-sm text-slate-600">{template.description}</p>
-                  <div className="flex flex-wrap gap-2">
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-slate-900">Core Templates</h2>
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Up to the mark</span>
+            </div>
+            <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {coreTemplates.map((template) => (
+                <article
+                  key={template.key}
+                  className="app-glass overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/50 transition hover:-translate-y-0.5 hover:shadow-xl"
+                >
+                  <img src={template.image} alt={`${template.title} template preview`} className="h-56 w-full object-cover" />
+                  <div className="space-y-3 p-5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-slate-900">{template.title}</h3>
+                      <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">{template.badge}</span>
+                    </div>
+                    <p className="text-sm text-slate-600">{template.description}</p>
                     <Link
                       to={`/builder?template=${template.key}&fresh=1`}
                       className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
                     >
                       Use This Template
                     </Link>
-                    <a
-                      href={template.referenceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                    >
-                      {template.referenceLabel}
-                    </a>
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+                </article>
+              ))}
+            </div>
+          </section>
 
-        <section className="pt-2 text-center">
-          <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener noreferrer">
-            <img
-              src="https://hitwebcounter.com/counter/counter.php?page=21486220&style=0030&nbdigits=6&type=page&initCount=0"
-              title="Free Tools"
-              alt="Free Tools"
-              className="mx-auto"
-            />
-          </a>
-        </section>
-      </div>
-    </main>
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-slate-900">India Campus Inspired Templates</h2>
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">New</span>
+            </div>
+            <p className="text-sm text-slate-600">
+              Crafted from common public placement-format patterns shared by students and communities. These are clean, ATS-safe, copyright-clean
+              reinterpretations to help students learn structure quickly.
+            </p>
+            <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {indiaCampusTemplates.map((template) => (
+                <article
+                  key={template.key}
+                  className="app-glass overflow-hidden rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/50 transition hover:-translate-y-0.5 hover:shadow-xl"
+                >
+                  <img src={template.image} alt={`${template.title} template preview`} className="h-56 w-full object-cover" />
+                  <div className="space-y-3 p-5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-slate-900">{template.title}</h3>
+                      <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700">Campus</span>
+                    </div>
+                    <p className="text-sm text-slate-600">{template.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        to={`/builder?template=${template.key}&fresh=1`}
+                        className="inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+                      >
+                        Use This Template
+                      </Link>
+                      <a
+                        href={template.referenceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                      >
+                        {template.referenceLabel}
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* View Counter */}
+          <div className="mt-10 flex flex-col items-center justify-center">
+              {/* hitwebcounter Code START */}
+              <a href="https://www.hitwebcounter.com/" target="_blank">
+                <img src="https://hitwebcounter.com/counter/counter.php?page=21486236&style=0005&nbdigits=6&type=page&initCount=72" title="Free Tools" alt="Free Tools" border="0" />
+              </a>
+            <div className="mt-2 text-sm text-slate-500">
+              Made with <span className="text-pink-500">♥</span> by{' '}
+              <a
+                href="https://www.linkedin.com/in/swayam-gupta0708/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-blue-600"
+              >
+                Swayam
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    // ...existing code...
+    </>
   );
 }
 
