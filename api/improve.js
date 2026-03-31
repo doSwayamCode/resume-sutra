@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: "Missing GROQ_API_KEY" });
+    res.status(500).json({ error: "AI service unavailable" });
     return;
   }
 

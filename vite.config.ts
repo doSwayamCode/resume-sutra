@@ -124,12 +124,7 @@ const devApiPlugin = (groqKey: string): Plugin => ({
       } catch (error) {
         res.statusCode = 500;
         res.setHeader("Content-Type", "application/json");
-        res.end(
-          JSON.stringify({
-            error: "Local dev API error",
-            detail: error instanceof Error ? error.message : String(error),
-          }),
-        );
+        res.end(JSON.stringify({ error: "Local dev API error" }));
       }
     });
   },

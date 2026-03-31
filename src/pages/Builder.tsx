@@ -603,9 +603,7 @@ function Builder() {
       const rawApiError = typeof errorData?.error === "string" ? errorData.error : errorData?.message;
       const apiError = typeof rawApiError === "string" ? rawApiError.trim() : "";
       if (apiError) {
-        if (apiError === "Missing GROQ_API_KEY") {
-          return "AI is not configured on server. Add GROQ_API_KEY in Vercel Project Settings -> Environment Variables and redeploy.";
-        }
+        if (apiError === "Missing GROQ_API_KEY") return "AI service unavailable";
         return apiError;
       }
       if (error.response?.status) {

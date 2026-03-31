@@ -216,6 +216,17 @@ function Home() {
             ))}
           </div>
         </section>
+
+        <section className="pt-2 text-center">
+          <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://hitwebcounter.com/counter/counter.php?page=21486220&style=0030&nbdigits=6&type=page&initCount=0"
+              title="Free Tools"
+              alt="Free Tools"
+              className="mx-auto"
+            />
+          </a>
+        </section>
       </div>
     </main>
   );

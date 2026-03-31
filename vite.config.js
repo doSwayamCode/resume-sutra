@@ -202,10 +202,7 @@ var devApiPlugin = function (groqKey) { return ({
                         error_1 = _e.sent();
                         res.statusCode = 500;
                         res.setHeader("Content-Type", "application/json");
-                        res.end(JSON.stringify({
-                            error: "Local dev API error",
-                            detail: error_1 instanceof Error ? error_1.message : String(error_1),
-                        }));
+                        res.end(JSON.stringify({ error: "Local dev API error" }));
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
