@@ -1,5 +1,3 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-
 type ImproveMode = "experience" | "summary" | "grammar" | "recruiter";
 
 const promptByMode: Record<ImproveMode, string> = {
@@ -15,14 +13,14 @@ const promptByMode: Record<ImproveMode, string> = {
 
 const MAX_INPUT_LENGTH = 4000;
 
-function setApiSecurityHeaders(res: VercelResponse) {
+function setApiSecurityHeaders(res: any) {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");
 }
 
-function parseRequestBody(req: VercelRequest): Record<string, unknown> | null {
+function parseRequestBody(req: any): Record<string, unknown> | null {
   if (!req.body) return {};
   if (typeof req.body === "string") {
     try {
@@ -39,7 +37,7 @@ function parseRequestBody(req: VercelRequest): Record<string, unknown> | null {
   return null;
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: any, res: any) {
   setApiSecurityHeaders(res);
 
   if (req.method !== "POST") {
