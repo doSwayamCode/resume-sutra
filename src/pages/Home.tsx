@@ -240,7 +240,7 @@ function Home() {
           </div>
         </div>
       </main>
-    // ...existing code...
+    {/* ...existing code... */}
     </>
   );
 }
