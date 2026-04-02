@@ -129,11 +129,11 @@ function Home() {
     <>
       <main className="min-h-screen px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
         <div className="mx-auto max-w-6xl space-y-8 sm:space-y-10">
-          <header className="flex items-center justify-center">
+          <header className="flex items-center justify-center pt-6 pb-4">
             <img
-              src="/resumesutra-logo.svg"
+              src="/resumesutra-logo.png"
               alt="ResumeSutra logo"
-              className="h-auto w-full max-w-[250px] object-contain sm:max-w-[300px] md:max-w-[360px]"
+              className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-[85vw] object-contain mix-blend-multiply"
             />
           </header>
 

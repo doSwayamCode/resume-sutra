@@ -864,16 +864,12 @@ function Builder() {
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 xl:grid-cols-[1.05fr_1fr]">
         {/* Footer and counter intentionally omitted from Builder page */}
         <section className="space-y-4">
-          <header className="app-glass rounded-xl border border-purple-100 p-4 shadow-md shadow-purple-100/40">
+          <header className="flex items-center justify-center pb-3 border-b border-slate-100">
             <img
-              src="/resumesutra-logo.svg"
+              src="/resumesutra-logo.png"
               alt="ResumeSutra logo"
-              className="h-auto w-full max-w-[300px] object-contain"
+              className="h-12 sm:h-14 w-auto max-w-[85vw] object-contain mix-blend-multiply"
             />
-            <h1 className="mt-2 text-xl font-bold text-slate-900">ResumeSutra Builder</h1>
-            <p className="mt-1 text-sm text-slate-600">
-              Build an ATS-optimized one-page resume with AI suggestions and exact PDF output.
-            </p>
           </header>
 
           <TemplateSelector value={safeTemplate} onChange={applyTemplate} />
