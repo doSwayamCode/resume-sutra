@@ -1,5 +1,6 @@
 import { CSSProperties, ReactNode, forwardRef } from "react";
 import { ResumeData, ResumeFontStyle, ResumeTemplate } from "../store/useResumeStore";
+import { useResumeStore } from "../store/useResumeStore";
 
 type ResumePreviewProps = {
   data: ResumeData;
@@ -11,6 +12,7 @@ type ResumePreviewProps = {
     itemGap: number;
     fontStyle?: ResumeFontStyle;
   };
+  showPlaceholders?: boolean;
 };
 
 type SectionKey =
@@ -52,20 +54,20 @@ const FONT_STYLE_STACK: Record<ResumeFontStyle, string> = {
 };
 
 const TEMPLATE_SECTION_ORDER: Record<ResumeTemplate, SectionKey[]> = {
-  jake: ["education", "experience", "projects", "skills", "achievements"],
-  "classic-logo": ["summary", "education", "experience", "projects", "skills", "achievements"],
-  "table-edu": ["education", "summary", "experience", "projects", "skills", "achievements"],
-  "modern-clean": ["experience", "projects", "skills", "education", "achievements"],
-  "dtu-placement": ["education", "experience", "projects", "positions", "certifications", "skills", "achievements"],
-  "nsut-placement": ["education", "experience", "projects", "positions", "achievements", "skills"],
-  "iit-placement": ["education", "projects", "skills", "experience", "positions", "achievements"],
-  "nit-placement": ["education", "experience", "projects", "skills", "positions", "achievements"],
-  "iiit-placement": ["education", "experience", "projects", "skills", "positions", "achievements"],
-  "iisc-academic": ["summary", "education", "projects", "experience", "skills", "achievements"],
-  "igdtuw-placement": ["education", "experience", "projects", "skills", "certifications", "positions", "achievements"],
-  "bits-placement": ["education", "experience", "projects", "positions", "achievements", "skills"],
-  "iim-management": ["summary", "experience", "skills", "education", "achievements", "certifications"],
-  "ggsipu-placement": ["education", "experience", "projects", "skills", "certifications", "positions", "achievements"],
+  jake: ["summary", "education", "experience", "projects", "skills", "achievements", "positions", "certifications"],
+  "classic-logo": ["summary", "education", "experience", "projects", "skills", "achievements", "positions", "certifications"],
+  "table-edu": ["education", "summary", "experience", "projects", "skills", "achievements", "positions", "certifications"],
+  "modern-clean": ["summary", "experience", "projects", "skills", "education", "achievements", "positions", "certifications"],
+  "dtu-placement": ["summary", "education", "experience", "projects", "positions", "certifications", "skills", "achievements"],
+  "nsut-placement": ["summary", "education", "experience", "projects", "positions", "achievements", "skills", "certifications"],
+  "iit-placement": ["summary", "education", "projects", "skills", "experience", "positions", "achievements", "certifications"],
+  "nit-placement": ["summary", "education", "experience", "projects", "skills", "positions", "achievements", "certifications"],
+  "iiit-placement": ["summary", "education", "experience", "projects", "skills", "positions", "achievements", "certifications"],
+  "iisc-academic": ["summary", "education", "projects", "experience", "skills", "achievements", "positions", "certifications"],
+  "igdtuw-placement": ["summary", "education", "experience", "projects", "skills", "certifications", "positions", "achievements"],
+  "bits-placement": ["summary", "education", "experience", "projects", "positions", "achievements", "skills", "certifications"],
+  "iim-management": ["summary", "experience", "skills", "education", "achievements", "certifications", "positions"],
+  "ggsipu-placement": ["summary", "education", "experience", "projects", "skills", "certifications", "positions", "achievements"],
   "ca-professional": [
     "summary",
     "skills",
@@ -78,6 +80,7 @@ const TEMPLATE_SECTION_ORDER: Record<ResumeTemplate, SectionKey[]> = {
     "certifications",
     "education",
     "achievements",
+    "positions",
   ],
 };
 
@@ -394,7 +397,8 @@ function renderProjectLinks(value: string): ReactNode {
   );
 }
 
-const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(({ data, template, layout }, ref) => {
+const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(({ data, template, layout, showPlaceholders = true }, ref) => {
+  const hiddenSections = useResumeStore((state) => state.hiddenSections);
   const headerMode = TEMPLATE_HEADER_MODE[template] ?? "centered";
   const tableTemplate = TABLE_EDUCATION_TEMPLATES.has(template);
   const legacyTableTemplate = template === "table-edu";
@@ -682,10 +686,16 @@ const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(({ data, te
     return (
       <>
         {sectionOrder.map((key) => {
-          const sectionNode = sectionRenderer[key]();
-          if (sectionNode) return sectionNode;
-          if (!strictTemplate) return null;
+          if (hiddenSections.includes(key)) return null;
+          
+          // Skip education if it's already rendered as a table
+          if (key === "education" && tableTemplate && template !== "table-edu") return null;
 
+          const sectionNode = sectionRenderer[key] ? sectionRenderer[key]() : null;
+          if (sectionNode) return sectionNode;
+          
+          if (!strictTemplate || !showPlaceholders) return null;
+          
           return (
             <section key={`${key}-placeholder`} className="section-placeholder">
               <h2>{resolveSectionTitle(key, DEFAULT_SECTION_TITLES[key])}</h2>
@@ -821,7 +831,7 @@ const ResumePreview = forwardRef<HTMLDivElement, ResumePreviewProps>(({ data, te
         }
       >
         {renderHeader()}
-        {tableTemplate && data.education.length > 0 ? renderTableEducation() : null}
+        {tableTemplate && data.education.length > 0 && !hiddenSections.includes("education") ? renderTableEducation() : null}
         {legacyTableTemplate ? (
           <>
             {data.summary.trim() && (

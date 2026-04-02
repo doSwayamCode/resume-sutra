@@ -480,7 +480,35 @@ function Builder() {
     updateSkillsFromText,
     updateSimpleListFromText,
     resetDraft,
+    hiddenSections,
+    hideSection,
+    showSection,
   } = useResumeStore();
+    // SectionKey list for UI mapping
+    const allSectionKeys: { key: import("../store/useResumeStore").SectionKey; label: string }[] = [
+      { key: "summary", label: "Summary" },
+      { key: "education", label: "Education" },
+      { key: "experience", label: "Experience" },
+      { key: "projects", label: "Projects" },
+      { key: "skills", label: "Skills" },
+      { key: "achievements", label: "Achievements" },
+      { key: "positions", label: "Positions of Responsibility" },
+      { key: "certifications", label: "Certifications" },
+      { key: "caArticleship", label: "CA Articleship" },
+      { key: "caAudit", label: "CA Audit" },
+      { key: "caTax", label: "CA Taxation" },
+      { key: "caTools", label: "CA Tools" },
+    ];
+    // UI: Show hidden sections with add button
+    const hiddenSectionList = allSectionKeys.filter((s) => hiddenSections.includes(s.key)).map((s) => (
+      <button
+        key={s.key}
+        className="mr-2 mb-2 rounded border border-green-400 bg-green-50 px-2 py-1 text-xs text-green-700 hover:bg-green-100"
+        onClick={() => showSection(s.key)}
+      >
+        + Add {s.label}
+      </button>
+    ));
   const [searchParams] = useSearchParams();
   const safeTemplate: ResumeTemplate = TEMPLATE_FORM_CONFIG[template] ? template : "jake";
   const activeTemplateConfig = TEMPLATE_FORM_CONFIG[safeTemplate];
@@ -663,7 +691,7 @@ function Builder() {
   const downloadPdf = async () => {
     const source = previewRef.current;
     if (!source) return;
-
+    updateSkillsFromText(skillsInput);
     setMessage("");
     await new Promise((resolve) => setTimeout(resolve, 60));
 
@@ -672,7 +700,6 @@ function Builder() {
         await document.fonts.ready;
       }
 
-      const maxPdfBytes = 2 * 1024 * 1024;
       const allowMultiPage = safeTemplate === "ca-professional";
       const exportHeight = allowMultiPage ? Math.max(1122, source.scrollHeight) : 1122;
       const exportNode = source.cloneNode(true) as HTMLDivElement;
@@ -680,7 +707,7 @@ function Builder() {
       exportNode.style.minHeight = `${exportHeight}px`;
       exportNode.style.maxHeight = allowMultiPage ? "none" : `${exportHeight}px`;
       exportNode.style.overflow = allowMultiPage ? "visible" : "hidden";
-      exportNode.style.padding = "28px 30px";
+      exportNode.style.padding = "26px 32px"; // Match .resume-paper padding exactly
       exportNode.style.margin = "0";
       exportNode.style.borderRadius = "0";
       exportNode.style.border = "0";
@@ -691,97 +718,60 @@ function Builder() {
       exportNode.style.top = "0";
       exportNode.style.zIndex = "-1";
 
+      exportNode.querySelectorAll(".section-placeholder").forEach((el) => el.remove());
+
       document.body.appendChild(exportNode);
 
-      let baseCanvas: HTMLCanvasElement;
+      let canvas: HTMLCanvasElement;
       try {
-        baseCanvas = await html2canvas(exportNode, {
-          scale: 2,
+        canvas = await html2canvas(exportNode, {
+          scale: 3, // Higher scale for better text quality
           useCORS: true,
           backgroundColor: "#ffffff",
           width: 794,
           height: exportHeight,
           scrollX: 0,
           scrollY: 0,
+          logging: false,
         });
       } finally {
         document.body.removeChild(exportNode);
       }
 
-      const downscaleSteps = [1, 0.92, 0.85, 0.78, 0.7, 0.62, 0.55];
-      const qualitySteps = [0.82, 0.76, 0.7, 0.64, 0.58, 0.52, 0.45];
+      const imageData = canvas.toDataURL("image/jpeg", 0.98);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: "a4",
+        compress: true,
+      });
 
-      let selectedPdf: jsPDF | null = null;
-      let selectedSize = Number.POSITIVE_INFINITY;
+      const pageWidth = 595.28;
+      const pageHeight = 841.89;
 
-      for (let index = 0; index < downscaleSteps.length; index += 1) {
-        const ratio = downscaleSteps[index];
-        const quality = qualitySteps[index];
+      if (allowMultiPage) {
+        const imageHeight = (canvas.height * pageWidth) / canvas.width;
+        let heightLeft = imageHeight;
+        let position = 0;
 
-        const exportCanvas = document.createElement("canvas");
-        exportCanvas.width = Math.max(1, Math.round(baseCanvas.width * ratio));
-        exportCanvas.height = Math.max(1, Math.round(baseCanvas.height * ratio));
+        pdf.addImage(imageData, "JPEG", 0, position, pageWidth, imageHeight, undefined, "FAST");
+        heightLeft -= pageHeight;
 
-        const context = exportCanvas.getContext("2d");
-        if (!context) {
-          throw new Error("Failed to initialize PDF canvas context");
-        }
-
-        context.fillStyle = "#ffffff";
-        context.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-        context.drawImage(baseCanvas, 0, 0, exportCanvas.width, exportCanvas.height);
-
-        const imageData = exportCanvas.toDataURL("image/jpeg", quality);
-        const pdf = new jsPDF({
-          orientation: "portrait",
-          unit: "pt",
-          format: "a4",
-          compress: true,
-        });
-
-        if (allowMultiPage) {
-          const pageWidth = 595.28;
-          const pageHeight = 841.89;
-          const imageHeight = (exportCanvas.height * pageWidth) / exportCanvas.width;
-
-          let heightLeft = imageHeight;
-          let position = 0;
-
+        while (heightLeft > 0) {
+          position = heightLeft - imageHeight;
+          pdf.addPage();
           pdf.addImage(imageData, "JPEG", 0, position, pageWidth, imageHeight, undefined, "FAST");
           heightLeft -= pageHeight;
-
-          while (heightLeft > 0) {
-            position = heightLeft - imageHeight;
-            pdf.addPage();
-            pdf.addImage(imageData, "JPEG", 0, position, pageWidth, imageHeight, undefined, "FAST");
-            heightLeft -= pageHeight;
-          }
-        } else {
-          pdf.addImage(imageData, "JPEG", 0, 0, 595.28, 841.89, undefined, "FAST");
         }
-        const blob = pdf.output("blob");
-
-        if (blob.size < selectedSize) {
-          selectedPdf = pdf;
-          selectedSize = blob.size;
-        }
-
-        if (blob.size <= maxPdfBytes) {
-          selectedPdf = pdf;
-          selectedSize = blob.size;
-          break;
-        }
+      } else {
+        pdf.addImage(imageData, "JPEG", 0, 0, 595.28, 841.89, undefined, "FAST");
       }
 
-      if (!selectedPdf) {
-        throw new Error("Unable to generate PDF");
-      }
+      const blob = pdf.output("blob");
+      const selectedSize = blob.size;
 
-      if (selectedSize > maxPdfBytes) {
-        throw new Error("Could not generate a PDF under 2 MB. Reduce logo resolution or trim content and try again.");
-      }
 
-      selectedPdf.save(`${(data.name || "resume").replace(/\s+/g, "-").toLowerCase()}.pdf`);
+      pdf.save(`${(data.name || "resume").replace(/\s+/g, "-").toLowerCase()}.pdf`);
       const finalSizeMb = (selectedSize / (1024 * 1024)).toFixed(2);
       setMessage(`PDF generated at ${finalSizeMb} MB.`);
     } catch (error) {
@@ -819,6 +809,7 @@ function Builder() {
 
   const copyResumeText = async () => {
     try {
+      updateSkillsFromText(skillsInput);
       const text = getResumePlainText(data);
       await navigator.clipboard.writeText(text);
       setMessage("Resume text copied.");
@@ -886,6 +877,13 @@ function Builder() {
           </header>
 
           <TemplateSelector value={safeTemplate} onChange={applyTemplate} />
+
+          {hiddenSectionList.length > 0 && (
+            <div className="mb-2">
+              <span className="text-xs text-slate-600 mr-2">Hidden sections:</span>
+              {hiddenSectionList}
+            </div>
+          )}
 
           <FormSection title="Resume Quality Score">
             <div className="rounded border border-slate-200 bg-white p-3">
@@ -987,7 +985,7 @@ function Builder() {
               </label>
             )}
             {activeTemplateConfig.supportsLogo && (
-              <>
+              <div className="mt-4 pt-4 border-t border-slate-100">
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
                   <label className="block text-xs font-medium text-slate-700">
                     Optional top logo
@@ -1001,28 +999,28 @@ function Builder() {
                   <button
                     type="button"
                     onClick={() => updateRootField("logoDataUrl", "")}
-                    className="self-end rounded border border-slate-300 px-3 py-2 text-xs text-slate-600"
+                    className="self-end rounded border border-slate-300 px-3 py-2 text-xs text-slate-600 h-9"
                   >
                     Remove Logo
                   </button>
                 </div>
-                <label className="block text-xs font-medium text-slate-700">
+                <label className="mt-3 block text-xs font-medium text-slate-700">
                   Logo size: {data.logoSize}px
                   <input
                     type="range"
-                    min={56}
-                    max={120}
+                    min={48}
+                    max={140}
                     step={2}
                     value={data.logoSize}
                     onChange={(event) => updateRootField("logoSize", Number(event.target.value))}
-                    className="mt-1 w-full"
+                    className="mt-1 w-full accent-indigo-600"
                   />
                 </label>
-              </>
+              </div>
             )}
           </FormSection>
 
-          {activeTemplateConfig.showSummary && (
+          {!hiddenSections.includes("summary") && (
             <FormSection
               title="Summary"
               actions={
@@ -1039,6 +1037,7 @@ function Builder() {
                   }}
                 />
               }
+              onRemove={() => hideSection("summary")}
             >
               <textarea
                 className="h-20 w-full rounded border border-gray-300 px-3 py-2 text-sm"
@@ -1050,7 +1049,8 @@ function Builder() {
             </FormSection>
           )}
 
-          <FormSection title="Education" actions={<button className="text-xs font-semibold" onClick={addEducation}>+ Add</button>}>
+          {!hiddenSections.includes("education") && (
+            <FormSection title="Education" actions={<button className="text-xs font-semibold" onClick={addEducation}>+ Add</button>} onRemove={() => hideSection("education")}>
             {data.education.map((item) => (
               <div key={item.id} className="space-y-2 rounded border border-gray-200 p-3">
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -1091,8 +1091,10 @@ function Builder() {
               </div>
             ))}
           </FormSection>
+          )}
 
-          <FormSection title="Experience" actions={<button className="text-xs font-semibold" onClick={addExperience}>+ Add</button>}>
+          {!hiddenSections.includes("experience") && (
+            <FormSection title="Experience" actions={<button className="text-xs font-semibold" onClick={addExperience}>+ Add</button>} onRemove={() => hideSection("experience")}>
             {data.experience.map((item) => (
               <div key={item.id} className="space-y-2 rounded border border-gray-200 p-3">
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -1171,8 +1173,10 @@ function Builder() {
               </div>
             ))}
           </FormSection>
+          )}
 
-          <FormSection title="Projects" actions={<button className="text-xs font-semibold" onClick={addProject}>+ Add</button>}>
+          {!hiddenSections.includes("projects") && (
+            <FormSection title="Projects" actions={<button className="text-xs font-semibold" onClick={addProject}>+ Add</button>} onRemove={() => hideSection("projects")}>
             {data.projects.map((item) => (
               <div key={item.id} className="space-y-2 rounded border border-gray-200 p-3">
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -1243,19 +1247,22 @@ function Builder() {
               </div>
             ))}
           </FormSection>
+          )}
 
-          <FormSection title="Skills (Required)">
-            <textarea
-              className="h-20 w-full rounded border border-gray-300 px-3 py-2 text-sm"
-              placeholder="Comma separated skills"
-              value={skillsInput}
-              onChange={(event) => setSkillsInput(event.target.value)}
-              onBlur={(event) => updateSkillsFromText(event.target.value)}
-            />
-          </FormSection>
+          {!hiddenSections.includes("skills") && (
+            <FormSection title="Skills" onRemove={() => hideSection("skills")}>
+              <textarea
+                className="h-20 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Comma separated skills (e.g. React, Node.js, TypeScript)"
+                value={skillsInput}
+                onChange={(event) => setSkillsInput(event.target.value)}
+                onBlur={(event) => updateSkillsFromText(event.target.value)}
+              />
+            </FormSection>
+          )}
 
-          {activeTemplateConfig.showAchievements && (
-            <FormSection title="Achievements (Optional)" actions={<button className="text-xs font-semibold" onClick={addAchievement}>+ Add</button>}>
+          {!hiddenSections.includes("achievements") && (
+            <FormSection title="Achievements" actions={<button className="text-xs font-semibold" onClick={addAchievement}>+ Add</button>} onRemove={() => hideSection("achievements")}>
               {data.achievements.map((item) => (
                 <div key={item.id} className="space-y-2 rounded border border-gray-200 p-3">
                   <input
@@ -1270,7 +1277,7 @@ function Builder() {
                     value={item.details}
                     onChange={(event) => updateAchievement(item.id, "details", event.target.value)}
                   />
-                  <button className="text-xs text-red-600" onClick={() => removeAchievement(item.id)}>
+                  <button className="text-xs text-red-600 font-medium" onClick={() => removeAchievement(item.id)}>
                     Remove
                   </button>
                 </div>
@@ -1278,25 +1285,33 @@ function Builder() {
             </FormSection>
           )}
 
-          {activeTemplateConfig.showCertificationsAndPositions && (
-            <FormSection title="Certifications / Positions (Optional)">
-              <textarea
-                className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
-                placeholder="One certification per line"
-                value={certText}
-                onChange={(event) => updateSimpleListFromText("certifications", event.target.value)}
-              />
-              <textarea
-                className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
-                placeholder="One position per line"
-                value={positionsText}
-                onChange={(event) => updateSimpleListFromText("positions", event.target.value)}
-              />
+          {(!hiddenSections.includes("certifications") || !hiddenSections.includes("positions")) && (
+            <FormSection title="Certifications / Positions (Optional)" onRemove={() => { hideSection("certifications"); hideSection("positions"); }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-slate-600">Certifications (one per line)</label>
+                  <textarea
+                    className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="One certification per line"
+                    value={certText}
+                    onChange={(event) => updateSimpleListFromText("certifications", event.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-slate-600">Position of Responsibility (one per line)</label>
+                  <textarea
+                    className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
+                    placeholder="One position per line"
+                    value={positionsText}
+                    onChange={(event) => updateSimpleListFromText("positions", event.target.value)}
+                  />
+                </div>
+              </div>
             </FormSection>
           )}
 
-          {safeTemplate === "ca-professional" && (
-            <FormSection title="CA Domain Sections">
+          {(!hiddenSections.includes("caArticleship") || !hiddenSections.includes("caAudit") || !hiddenSections.includes("caTax") || !hiddenSections.includes("caTools")) && (
+            <FormSection title="CA Domain Sections" onRemove={() => { hideSection("caArticleship"); hideSection("caAudit"); hideSection("caTax"); hideSection("caTools"); }}>
               <textarea
                 className="h-16 w-full rounded border border-gray-300 px-3 py-2 text-sm"
                 placeholder="Articleship highlights (one line per entry)"

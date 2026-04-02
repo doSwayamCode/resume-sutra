@@ -1,5 +1,20 @@
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
+export type SectionKey =
+  | "summary"
+  | "education"
+  | "experience"
+  | "projects"
+  | "skills"
+  | "achievements"
+  | "positions"
+  | "certifications"
+  | "caArticleship"
+  | "caAudit"
+  | "caTax"
+  | "caTools";
 
 export type ResumeTemplate =
   | "jake"
@@ -83,6 +98,9 @@ type LayoutSettings = {
 };
 
 type ResumeStore = {
+    hiddenSections: SectionKey[];
+    hideSection: (key: SectionKey) => void;
+    showSection: (key: SectionKey) => void;
   template: ResumeTemplate;
   data: ResumeData;
   layout: LayoutSettings;
@@ -155,25 +173,7 @@ const defaultData: ResumeData = {
   caTools: [],
 };
 
-const ALLOWED_TEMPLATES: ResumeTemplate[] = [
-  "jake",
-  "classic-logo",
-  "table-edu",
-  "modern-clean",
-  "dtu-placement",
-  "nsut-placement",
-  "iit-placement",
-  "nit-placement",
-  "iiit-placement",
-  "iisc-academic",
-  "igdtuw-placement",
-  "bits-placement",
-  "iim-management",
-  "ggsipu-placement",
-  "ca-professional",
-];
 
-const ALLOWED_FONT_STYLES: ResumeFontStyle[] = ["latex", "classic", "modern", "serif-pro", "executive", "clean-sans"];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 
@@ -181,11 +181,7 @@ const toStringValue = (value: unknown): string => (typeof value === "string" ? v
 
 const toStringArray = (value: unknown): string[] => (Array.isArray(value) ? value.map((item) => String(item ?? "")) : []);
 
-const normalizeTemplate = (value: unknown): ResumeTemplate =>
-  ALLOWED_TEMPLATES.includes(value as ResumeTemplate) ? (value as ResumeTemplate) : "jake";
 
-const normalizeFontStyle = (value: unknown): ResumeFontStyle =>
-  ALLOWED_FONT_STYLES.includes(value as ResumeFontStyle) ? (value as ResumeFontStyle) : "serif-pro";
 
 const normalizeEducation = (value: unknown): EducationItem[] => {
   if (!Array.isArray(value)) return [];
@@ -267,21 +263,6 @@ const normalizeResumeData = (value: unknown): ResumeData => {
   };
 };
 
-const normalizeLayout = (value: unknown): LayoutSettings => {
-  const raw = isRecord(value) ? value : {};
-  const fontSize = typeof raw.fontSize === "number" && Number.isFinite(raw.fontSize) ? raw.fontSize : defaultLayout.fontSize;
-  const lineHeight = typeof raw.lineHeight === "number" && Number.isFinite(raw.lineHeight) ? raw.lineHeight : defaultLayout.lineHeight;
-  const sectionGap = typeof raw.sectionGap === "number" && Number.isFinite(raw.sectionGap) ? raw.sectionGap : defaultLayout.sectionGap;
-  const itemGap = typeof raw.itemGap === "number" && Number.isFinite(raw.itemGap) ? raw.itemGap : defaultLayout.itemGap;
-
-  return {
-    fontSize: Math.max(12, fontSize),
-    lineHeight: Math.max(1.28, lineHeight),
-    sectionGap: Math.max(8, sectionGap),
-    itemGap: Math.max(3, itemGap),
-    fontStyle: normalizeFontStyle(raw.fontStyle),
-  };
-};
 
 export const useResumeStore = create<ResumeStore>()(
   persist(
@@ -289,331 +270,301 @@ export const useResumeStore = create<ResumeStore>()(
       template: "jake",
       data: defaultData,
       layout: defaultLayout,
-  setTemplate: (template) => set({ template }),
-  setData: (data) => set({ data: normalizeResumeData(data) }),
-  resetDraft: () => set({ data: defaultData, layout: defaultLayout }),
-  updateRootField: (field, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        [field]: value,
-      },
-    })),
-  addEducation: () =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        education: [
-          ...state.data.education,
-          {
-            id: makeId(),
-            school: "",
-            degree: "",
-            details: "",
-            startDate: "",
-            endDate: "",
+      hiddenSections: [],
+      setTemplate: (template) => set({ template }),
+      setData: (data) => set({ data: normalizeResumeData(data) }),
+      resetDraft: () => set({ data: defaultData, layout: defaultLayout, hiddenSections: [] }),
+      updateRootField: (field, value) =>
+        set((state) => ({
+          data: {
+            ...state.data,
+            [field]: value,
           },
-        ],
-      },
-    })),
-  removeEducation: (id) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        education: state.data.education.filter((item) => item.id !== id),
-      },
-    })),
-  updateEducation: (id, field, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        education: state.data.education.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                [field]: value,
-              }
-            : item,
-        ),
-      },
-    })),
-  addExperience: () =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: [
-          ...state.data.experience,
-          {
-            id: makeId(),
-            role: "",
-            company: "",
-            startDate: "",
-            endDate: "",
-            bullets: [""],
-          },
-        ],
-      },
-    })),
-  removeExperience: (id) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: state.data.experience.filter((item) => item.id !== id),
-      },
-    })),
-  updateExperienceField: (id, field, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: state.data.experience.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                [field]: value,
-              }
-            : item,
-        ),
-      },
-    })),
-  updateExperienceBullet: (id, index, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: state.data.experience.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: item.bullets.map((bullet, bulletIndex) => (bulletIndex === index ? value : bullet)),
-              }
-            : item,
-        ),
-      },
-    })),
-  setExperienceBullets: (id, bullets) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: state.data.experience.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: bullets.slice(0, 4),
-              }
-            : item,
-        ),
-      },
-    })),
-  addExperienceBullet: (id) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: state.data.experience.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: [...item.bullets, ""],
-              }
-            : item,
-        ),
-      },
-    })),
-  removeExperienceBullet: (id, index) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        experience: state.data.experience.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: item.bullets.filter((_, bulletIndex) => bulletIndex !== index),
-              }
-            : item,
-        ),
-      },
-    })),
-  addProject: () =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: [
-          ...state.data.projects,
-          {
-            id: makeId(),
-            name: "",
-            tech: "",
-            link: "",
-            bullets: [""],
-          },
-        ],
-      },
-    })),
-  removeProject: (id) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: state.data.projects.filter((item) => item.id !== id),
-      },
-    })),
-  updateProjectField: (id, field, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: state.data.projects.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                [field]: value,
-              }
-            : item,
-        ),
-      },
-    })),
-  updateProjectBullet: (id, index, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: state.data.projects.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: item.bullets.map((bullet, bulletIndex) => (bulletIndex === index ? value : bullet)),
-              }
-            : item,
-        ),
-      },
-    })),
-  setProjectBullets: (id, bullets) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: state.data.projects.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: bullets.slice(0, 4),
-              }
-            : item,
-        ),
-      },
-    })),
-  addProjectBullet: (id) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: state.data.projects.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: [...item.bullets, ""],
-              }
-            : item,
-        ),
-      },
-    })),
-  removeProjectBullet: (id, index) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        projects: state.data.projects.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                bullets: item.bullets.filter((_, bulletIndex) => bulletIndex !== index),
-              }
-            : item,
-        ),
-      },
-    })),
-  addAchievement: () =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        achievements: [...state.data.achievements, { id: makeId(), title: "", details: "" }],
-      },
-    })),
-  removeAchievement: (id) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        achievements: state.data.achievements.filter((item) => item.id !== id),
-      },
-    })),
-  updateAchievement: (id, field, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        achievements: state.data.achievements.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                [field]: value,
-              }
-            : item,
-        ),
-      },
-    })),
-  updateSkillsFromText: (value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        skills: value
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean),
-      },
-    })),
-  updateSimpleListFromText: (field, value) =>
-    set((state) => ({
-      data: {
-        ...state.data,
-        [field]: value
-          .split("\n")
-          .map((item) => item.trim())
-          .filter(Boolean),
-      },
-    })),
-  setLayout: (partial) =>
-    set((state) => ({
-      layout: {
-        ...state.layout,
-        ...(typeof partial === "function" ? partial(state.layout) : partial),
-      },
-    })),
-      resetLayout: () => set({ layout: defaultLayout }),
+        })),
+      hideSection: (key: SectionKey) => set((state) => ({ hiddenSections: Array.from(new Set([...state.hiddenSections, key])) })),
+      showSection: (key: SectionKey) => set((state) => ({ hiddenSections: state.hiddenSections.filter((k) => k !== key) })),
+        addEducation: () =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              education: [
+                ...state.data.education,
+                {
+                  id: makeId(),
+                  school: "",
+                  degree: "",
+                  details: "",
+                  startDate: "",
+                  endDate: "",
+                },
+              ],
+            },
+          })),
+        removeEducation: (id) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              education: state.data.education.filter((item) => item.id !== id),
+            },
+          })),
+        updateEducation: (id, field, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              education: state.data.education.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      [field]: value,
+                    }
+                  : item,
+              ),
+            },
+          })),
+        addExperience: () =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: [
+                ...state.data.experience,
+                {
+                  id: makeId(),
+                  role: "",
+                  company: "",
+                  startDate: "",
+                  endDate: "",
+                  bullets: [""],
+                },
+              ],
+            },
+          })),
+        removeExperience: (id) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: state.data.experience.filter((item) => item.id !== id),
+            },
+          })),
+        updateExperienceField: (id, field, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: state.data.experience.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      [field]: value,
+                    }
+                  : item,
+              ),
+            },
+          })),
+        updateExperienceBullet: (id, index, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: state.data.experience.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: item.bullets.map((bullet, bulletIndex) => (bulletIndex === index ? value : bullet)),
+                    }
+                  : item,
+              ),
+            },
+          })),
+        setExperienceBullets: (id, bullets) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: state.data.experience.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: bullets.slice(0, 4),
+                    }
+                  : item,
+              ),
+            },
+          })),
+        addExperienceBullet: (id) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: state.data.experience.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: [...item.bullets, ""],
+                    }
+                  : item,
+              ),
+            },
+          })),
+        removeExperienceBullet: (id, index) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              experience: state.data.experience.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: item.bullets.filter((_, bulletIndex) => bulletIndex !== index),
+                    }
+                  : item,
+              ),
+            },
+          })),
+        addProject: () =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: [
+                ...state.data.projects,
+                {
+                  id: makeId(),
+                  name: "",
+                  tech: "",
+                  link: "",
+                  bullets: [""],
+                },
+              ],
+            },
+          })),
+        removeProject: (id) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: state.data.projects.filter((item) => item.id !== id),
+            },
+          })),
+        updateProjectField: (id, field, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: state.data.projects.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      [field]: value,
+                    }
+                  : item,
+              ),
+            },
+          })),
+        updateProjectBullet: (id, index, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: state.data.projects.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: item.bullets.map((bullet, bulletIndex) => (bulletIndex === index ? value : bullet)),
+                    }
+                  : item,
+              ),
+            },
+          })),
+        setProjectBullets: (id, bullets) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: state.data.projects.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: bullets.slice(0, 4),
+                    }
+                  : item,
+              ),
+            },
+          })),
+        addProjectBullet: (id) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: state.data.projects.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: [...item.bullets, ""],
+                    }
+                  : item,
+              ),
+            },
+          })),
+        removeProjectBullet: (id, index) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              projects: state.data.projects.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      bullets: item.bullets.filter((_, bulletIndex) => bulletIndex !== index),
+                    }
+                  : item,
+              ),
+            },
+          })),
+        addAchievement: () =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              achievements: [...state.data.achievements, { id: makeId(), title: "", details: "" }],
+            },
+          })),
+        removeAchievement: (id) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              achievements: state.data.achievements.filter((item) => item.id !== id),
+            },
+          })),
+        updateAchievement: (id, field, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              achievements: state.data.achievements.map((item) =>
+                item.id === id
+                  ? {
+                      ...item,
+                      [field]: value,
+                    }
+                  : item,
+              ),
+            },
+          })),
+        updateSkillsFromText: (value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              skills: value
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            },
+          })),
+        updateSimpleListFromText: (field, value) =>
+          set((state) => ({
+            data: {
+              ...state.data,
+              [field]: value
+                .split("\n")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            },
+          })),
+        setLayout: (partial) =>
+          set((state) => ({
+            layout: {
+              ...state.layout,
+              ...(typeof partial === "function" ? partial(state.layout) : partial),
+            },
+          })),
+        resetLayout: () => set({ layout: defaultLayout }),
     }),
-    {
-      name: "resume-sutra-draft-v1",
-      version: 2,
-      migrate: (persistedState: unknown) => {
-        if (!persistedState || typeof persistedState !== "object") {
-          return persistedState as ResumeStore;
-        }
-
-        const state = persistedState as Partial<ResumeStore>;
-        return {
-          ...state,
-          template: normalizeTemplate(state.template),
-          data: normalizeResumeData(state.data),
-          layout: normalizeLayout(state.layout),
-        } as ResumeStore;
-      },
-      merge: (persistedState, currentState) => {
-        const persisted = isRecord(persistedState) ? persistedState : {};
-        const current = currentState as ResumeStore;
-
-        return {
-          ...current,
-          ...persisted,
-          template: normalizeTemplate(persisted.template),
-          data: normalizeResumeData(persisted.data),
-          layout: normalizeLayout(persisted.layout),
-        } as ResumeStore;
-      },
-      partialize: (state) => ({
-        template: state.template,
-        data: state.data,
-        layout: state.layout,
-      }),
-    },
-  ),
+    { name: "resume-store" }
+  )
 );
